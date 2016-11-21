@@ -100,6 +100,9 @@ todos[0].completed = True
 # Adding a new todo
 todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
 
+# Remove a todo
+del todos[0]
+
 # Make something with todos like exporting them to a file with todotxtio.to_file (see below)
 ```
 
@@ -122,10 +125,13 @@ todo.contexts = ['awesomeness', 'ftw']
 todo.projects.append('awesome-project')
 todo.contexts.append('cool')
 
+# Remove a context
+todo.contexts.remove('cool')
+
 # Empty the projects list
 todo.projects = [] # Or None
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +awesomeness +ftw +cool
+print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +awesomeness +ftw
 ```
 
 #### Todo completion
