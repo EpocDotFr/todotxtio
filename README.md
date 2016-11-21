@@ -1,6 +1,6 @@
 # Todo.txt I/O
 
-A simple Python module to parse and write [Todo.txt](http://todotxt.com/) files.
+A simple Python module to parse, manipulate and write [Todo.txt](http://todotxt.com/) data.
 
 [![Latest release](https://img.shields.io/github/release/EpocDotFr/todotxtio.svg)](https://github.com/EpocDotFr/todotxtio/releases) [![License](https://img.shields.io/github/license/EpocDotFr/todotxtio.svg)](https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md) 
 
@@ -202,6 +202,8 @@ I'm in love with. Python guys +python @ftw
 ```
 
 Not ideal, I know.
+
+  - This is my very first PyPI package.
 
 ## Changelog
 
