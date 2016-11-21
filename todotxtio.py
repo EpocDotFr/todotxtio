@@ -7,7 +7,10 @@ todo_context_regex = re.compile(' @(\w+)')
 
 
 def from_stream(stream):
-    """Load a todo list from an already opened stream."""
+    """Load a todo list from an already opened stream.
+
+    :return: A list of Todo objects
+    """
     string = stream.read()
 
     stream.close()
@@ -16,7 +19,10 @@ def from_stream(stream):
 
 
 def from_file(file_path):
-    """Load a todo list from a file."""
+    """Load a todo list from a file.
+
+    :return: A list of Todo objects
+    """
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
 
@@ -26,7 +32,10 @@ def from_file(file_path):
 
 
 def from_string(string):
-    """Load a todo list from a string."""
+    """Load a todo list from a string.
+
+    :return: A list of Todo objects
+    """
     todos = []
 
     for line in string.splitlines():
@@ -78,11 +87,24 @@ def to_file(file_path, todos):
 
 
 def to_string(todos):
-    """Return a list of todos as a string."""
+    """Return a list of todos as a string.
+
+    :return: The todo as a string
+    """
     return '\n'.join([str(todo) for todo in todos])
 
 
 class Todo:
+    """Represent one todo.
+
+    :param str text: The text of the todo
+    :param bool completed: Should this todo be marked as completed or not (default to False)
+    :param str completion_date: A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True (default to None)
+    :param str priority: The priority of the todo represented by a char bewteen A-Z (default to None)
+    :param str creation_date: A create date, in the YYYY-MM-DD format (default to None)
+    :param list projects: A list of projects without + (default to an empty list)
+    :param list contexts: A list of projects without @ (default to an empty list)
+    """
     text = None
     completed = False
     completion_date = None
@@ -94,7 +116,10 @@ class Todo:
     def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
         self.text = text
         self.completed = completed
-        self.completion_date = completion_date
+
+        if completion_date:
+            self.completion_date = completion_date
+
         self.priority = priority
         self.creation_date = creation_date
         self.projects = projects
@@ -147,3 +172,53 @@ class Todo:
     def __repr__(self):
         """Call the __str__ method to return a textual representation of this Todo object."""
         return self.__str__()
+
+
+class TodoList:
+    """Used to perform advanced operations with a list of Todo objects."""
+    todos = []
+
+    def __init__(self, todos):
+        self.todos = todos
+
+    def search(self, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+        """Return a list of todos that matches the filters."""
+        results = []
+
+        for todo in self.todos:
+            if text is not None and text in todo.text:
+                results.append(todo)
+                continue
+
+            if completed is not None and todo.completed == completed:
+                results.append(todo)
+                continue
+
+            if completion_date is not None and todo.completion_date == completion_date:
+                results.append(todo)
+                continue
+
+            if priority is not None and todo.priority in priority:
+                results.append(todo)
+                continue
+
+            if creation_date is not None and todo.creation_date == creation_date:
+                results.append(todo)
+                continue
+
+            if projects is not None and any(i in projects for i in todo.projects):
+                results.append(todo)
+                continue
+
+            if contexts is not None and any(i in contexts for i in todo.contexts):
+                results.append(todo)
+                continue
+
+        return results
+
+    def __setattr__(self, name, value):
+        if name == 'todos':
+            if type(value) is not list: # Make sure that the provided value is a list
+                raise ValueError(name + ' should be a list of Todo objects')
+
+        super().__setattr__(name, value)
