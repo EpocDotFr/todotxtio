@@ -2,13 +2,15 @@
 
 A simple Python module to parse, manipulate and write [Todo.txt](http://todotxt.com/) data.
 
-[![Latest release](https://img.shields.io/github/release/EpocDotFr/todotxtio.svg)](https://github.com/EpocDotFr/todotxtio/releases) [![License](https://img.shields.io/github/license/EpocDotFr/todotxtio.svg)](https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md) 
+[![PyPI](https://img.shields.io/pypi/v/todotxtio.svg)]() [![PyPI](https://img.shields.io/pypi/l/todotxtio.svg)]()
 
 This module 100% comply to the [Todo.txt specifications](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). There aren't any unit tests, but trust me.
 
 ## Prerequisites
 
-Python 3 (tested with Python 3.5, feel free to test on another one and give me feedback).
+[![PyPI](https://img.shields.io/pypi/pyversions/todotxtio.svg)]()
+
+Feel free to test with another Python version and give me feedback.
 
 ## Installation
 
