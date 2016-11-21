@@ -83,7 +83,7 @@ def to_string(todos):
 
 
 class Todo:
-    text = '(No content)'
+    text = None
     completed = False
     completion_date = None
     priority = None
@@ -91,25 +91,32 @@ class Todo:
     projects = []
     contexts = []
 
-    def __init__(self, text='(No content)', completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+    def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
         self.text = text
-
-        if completion_date:
-            self.completed = True
-            self.completion_date = completion_date
-        else:
-            self.completed = completed
-
+        self.completed = completed
+        self.completion_date = completion_date
         self.priority = priority
         self.creation_date = creation_date
+        self.projects = projects
+        self.contexts = contexts
 
-        if projects:
-            self.projects = projects
+    def __setattr__(self, name, value):
+        if name == 'completed':
+            if not value:
+                super().__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
+        elif name == 'completion_date':
+            if value:
+                super().__setattr__('completed', True) # Setting the completion date must set this todo as completed...
+            else:
+                super().__setattr__('completed', False) # ...and vice-versa
+        elif name in ['projects', 'contexts']:
+            if not value:
+                super().__setattr__(name, []) # Force contexts and projects to be lists when setting them to a falsely value
 
-        if contexts:
-            self.contexts = contexts
+        super().__setattr__(name, value)
 
     def __str__(self):
+        """Convert this Todo object in a valid Todo.txt todo line."""
         ret = []
 
         if self.completed:
@@ -135,4 +142,5 @@ class Todo:
         return ' '.join(ret)
 
     def __repr__(self):
+        """Call the __str__ method to return a textual representation of this Todo object."""
         return self.__str__()

@@ -123,7 +123,7 @@ todo.projects.append('awesome-project')
 todo.contexts.append('cool')
 
 # Empty the projects list
-todo.projects = []
+todo.projects = [] # Or None
 
 print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +awesomeness +ftw +cool
 ```
@@ -159,6 +159,8 @@ print(todo) # x 2016-12-01 (A) 2016-11-20 Thank Guido for such an awesome progra
 ```
 
 This is also applicable to the `Todo` constructor.
+
+Of course, inverse is also applicable (setting `completed` to `False` removes the completion date).
 
 ### Writing
 
