@@ -7,6 +7,7 @@ todo_context_regex = re.compile(' @(\w+)')
 
 
 def from_stream(stream):
+    """Load a todo list from an already opened stream."""
     string = stream.read()
 
     stream.close()
@@ -15,6 +16,7 @@ def from_stream(stream):
 
 
 def from_file(file_path):
+    """Load a todo list from a file."""
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
 
@@ -24,6 +26,7 @@ def from_file(file_path):
 
 
 def from_string(string):
+    """Load a todo list from a string."""
     todos = []
 
     for line in string.splitlines():
@@ -63,16 +66,19 @@ def from_string(string):
 
 
 def to_stream(stream, todos):
+    """Write a list of todos to an already opened stream."""
     stream.write(to_string(todos))
     stream.close()
 
 
 def to_file(file_path, todos):
+    """Write a list of todos to a file."""
     stream = open(file_path, 'w')
     to_stream(stream, todos)
 
 
 def to_string(todos):
+    """Return a list of todos as a string."""
     return '\n'.join([str(todo) for todo in todos])
 
 

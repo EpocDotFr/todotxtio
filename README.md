@@ -20,7 +20,7 @@ pip install todotxtio
 
 Firstly, import the module:
 
-```
+```python
 import todotxtio
 ```
 
@@ -28,19 +28,19 @@ import todotxtio
 
 You can parse todos from a file:
 
-```
+```python
 todos = todotxtio.from_file('todo.txt')
 ```
 
 Or from a string, why not:
 
-```
+```python
 todos = todotxtio.from_string(my_string_full_of_todos)
 ```
 
 Or even from an already opened stream:
 
-```
+```python
 todos = todotxtio.from_stream(my_stream_full_of_todos) # Will also close the stream
 ```
 
@@ -52,7 +52,7 @@ They all return a plain-old Python list filled with `Todo` objects (or an empty 
 
 Create a new todo by instantiating a `Todo` object. You can feed todo data via its constructor arguments (none are required):
 
-```
+```python
 todo = Todo(
     text='Thank Guido for such an awesome programming language',
     priority='A',
@@ -64,7 +64,7 @@ print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming languag
 
 Or you also can instantiate an empty (or partially-instantiated) `Todo` object and define its parameters later:
 
-```
+```python
 todo = Todo(
     creation_date='2016-11-20' # For example only, but constructor can be empty and this can be defined later as well
 )
@@ -77,7 +77,7 @@ print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming languag
 
 Once a `Todo` is instantiated, you can use its attributes to modify its data.
 
-```
+```python
 # todo is a Todo instance
 
 todo.text = 'Hello, I\'m the new text'
@@ -89,7 +89,7 @@ todo.creation_date = None # Deleting the creation date
 
 They are both plain-old Python lists without leading `+` and `@`:
 
-```
+```python
 # todo is a Todo instance
 
 # Erase existing projects or contexts
@@ -108,7 +108,7 @@ todo.projects = []
 
 You can either mark a todo as completed by setting its `completed` attribute to `True`:
 
-```
+```python
 # todo is a Todo instance
 
 todo.completed = True
@@ -116,7 +116,7 @@ todo.completed = True
 
 Or by defining its completion date, which automatically set its `completed` attribute to `True`:
 
-```
+```python
 # todo is a Todo instance
 
 todo.completion_date = '2016-12-01'
@@ -128,7 +128,7 @@ This is also applicable to the `Todo` constructor.
 
 Write todos to a file:
 
-```
+```python
 # my_todos is a list of Todo objects
 
 todotxtio.to_file('todo.txt', my_todos)
@@ -138,17 +138,17 @@ todotxtio.to_file('todo.txt', my_todos)
 
 Also, you can write to a string:
 
-```
+```python
 # my_todos is a list of Todo objects
 
 my_string_full_of_todos = todotxtio.to_string(my_todos)
 ```
 
-Or even to an already-opened stream:
+Or even to an already opened stream:
 
-```
+```python
 # my_todos is a list of Todo objects
-# my_stream is an already-opened stream
+# my_stream is an already opened stream
 
 todotxtio.to_stream(my_stream, my_todos) # Will also close the stream
 ```
