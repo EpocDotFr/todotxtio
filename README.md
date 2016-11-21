@@ -131,7 +131,7 @@ todo.contexts.remove('cool')
 # Empty the projects list
 todo.projects = [] # Or None
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +awesomeness +ftw
+print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language @awesomeness @ftw
 ```
 
 #### Todo completion
