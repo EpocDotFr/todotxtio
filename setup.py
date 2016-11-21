@@ -8,7 +8,7 @@ with open(path.join(here, 'README.md')) as f:
 
 setup(
     name='todotxtio',
-    version='0.0.1',
+    version='0.1.0',
     description='A simple Python module to parse, manipulate and write Todo.txt data',
     long_description=long_description,
     url='https://github.com/EpocDotFr/todotxtio',
@@ -22,5 +22,6 @@ setup(
         'Programming Language :: Python :: 3'
     ],
     keywords='todotxt todo.txt file parse parser read reader',
-    py_modules=['todotxtio']
+    py_modules=['todotxtio'],
+    download_url='https://github.com/EpocDotFr/todotxtio/archive/0.1.0.tar.gz'
 )
