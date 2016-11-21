@@ -53,26 +53,26 @@ They all return a plain-old Python list filled with `Todo` objects (or an empty 
 Create a new todo by instantiating a `Todo` object. You can feed todo data via its constructor arguments (none are required):
 
 ```python
-todo = Todo(
+todo = todotxtio.Todo(
     text='Thank Guido for such an awesome programming language',
     priority='A',
     creation_date='2016-11-20'
 )
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +python @awesomeness @ftw
+print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
 ```
 
 Or you also can instantiate an empty (or partially-instantiated) `Todo` object and define its parameters later:
 
 ```python
-todo = Todo(
+todo = todotxtio.Todo(
     creation_date='2016-11-20' # For example only, but constructor can be empty and this can be defined later as well
 )
 
 todo.text = 'Thank Guido for such an awesome programming language'
 todo.priority = 'A'
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +python @awesomeness @ftw
+print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
 ```
 
 Once a `Todo` is instantiated, you can use its attributes to modify its data.
@@ -85,23 +85,45 @@ todo.priority = 'C'
 todo.creation_date = None # Deleting the creation date
 ```
 
-#### Projects and contexts
-
-They are both plain-old Python lists without leading `+` and `@`:
+Playing with todo lists is easy, the same way when manipulating any Python lists:
 
 ```python
-# todo is a Todo instance
+todos = []
 
-# Erase existing projects or contexts
+todos.append(todotxtio.Todo(text='A todo in its simplest form!'))
+
+# Updating the completion of the first todo in the todos list
+todos[0].completed = True
+
+# Adding a new todo
+todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
+
+# Make something with todos like exporting them to a file with todotxtio.to_file (see below)
+```
+
+#### Projects and contexts
+
+They are both plain-old Python lists without leadings `+` and `@`:
+
+```python
+todo = todotxtio.Todo(
+    text='Thank Guido for such an awesome programming language',
+    priority='A',
+    creation_date='2016-11-20'
+)
+
+# Define some projects and contexts
 todo.projects = ['python']
 todo.contexts = ['awesomeness', 'ftw']
 
 # Append to existings projects or contexts
 todo.projects.append('awesome-project')
-todo.contexts.append('home')
+todo.contexts.append('cool')
 
 # Empty the projects list
 todo.projects = []
+
+print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language +awesomeness +ftw +cool
 ```
 
 #### Todo completion
@@ -109,17 +131,29 @@ todo.projects = []
 You can either mark a todo as completed by setting its `completed` attribute to `True`:
 
 ```python
-# todo is a Todo instance
+todo = todotxtio.Todo(
+    text='Thank Guido for such an awesome programming language',
+    priority='A',
+    creation_date='2016-11-20'
+)
 
 todo.completed = True
+
+print(todo) # x (A) 2016-11-20 Thank Guido for such an awesome programming language
 ```
 
 Or by defining its completion date, which automatically set its `completed` attribute to `True`:
 
 ```python
-# todo is a Todo instance
+todo = todotxtio.Todo(
+    text='Thank Guido for such an awesome programming language',
+    priority='A',
+    creation_date='2016-11-20'
+)
 
 todo.completion_date = '2016-12-01'
+
+print(todo) # x 2016-12-01 (A) 2016-11-20 Thank Guido for such an awesome programming language
 ```
 
 This is also applicable to the `Todo` constructor.
