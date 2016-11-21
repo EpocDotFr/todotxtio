@@ -6,14 +6,21 @@ todo_project_regex = re.compile(' \+(\w+)')
 todo_context_regex = re.compile(' @(\w+)')
 
 
+def from_stream(stream):
+    string = stream.read()
+
+    stream.close()
+
+    return from_string(string)
+
+
 def from_file(file_path):
     if not os.path.isfile(file_path):
         raise FileNotFoundError(file_path)
 
-    with open(file_path, 'r') as f:
-        string = f.read()
+    stream = open(file_path, 'r')
 
-    return from_string(string)
+    return from_stream(stream)
 
 
 def from_string(string):
@@ -55,9 +62,14 @@ def from_string(string):
     return todos
 
 
+def to_stream(stream, todos):
+    stream.write(to_string(todos))
+    stream.close()
+
+
 def to_file(file_path, todos):
-    with open(file_path, 'w') as f:
-        f.write(to_string(todos))
+    stream = open(file_path, 'w')
+    to_stream(stream, todos)
 
 
 def to_string(todos):

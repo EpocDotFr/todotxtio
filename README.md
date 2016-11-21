@@ -38,7 +38,13 @@ Or from a string, why not:
 todos = todotxtio.from_string(my_string_full_of_todos)
 ```
 
-Both return a plain-old Python list filled with `Todo` objects (or an empty one if there's no todos).
+Or even from an already opened stream:
+
+```
+todos = todotxtio.from_stream(my_stream_full_of_todos) # Will also close the stream
+```
+
+They all return a plain-old Python list filled with `Todo` objects (or an empty one if there's no todos).
 
 ### `Todo` object
 
@@ -136,6 +142,15 @@ Also, you can write to a string:
 # my_todos is a list of Todo objects
 
 my_string_full_of_todos = todotxtio.to_string(my_todos)
+```
+
+Or even to an already-opened stream:
+
+```
+# my_todos is a list of Todo objects
+# my_stream is an already-opened stream
+
+todotxtio.to_stream(my_stream, my_todos) # Will also close the stream
 ```
 
 ## Gotchas
