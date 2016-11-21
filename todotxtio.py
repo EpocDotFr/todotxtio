@@ -112,6 +112,9 @@ class Todo:
         elif name in ['projects', 'contexts']:
             if not value:
                 super().__setattr__(name, []) # Force contexts and projects to be lists when setting them to a falsely value
+                return
+            elif type(value) is not list: # Make sure, otherwise, that the provided value is a list
+                raise ValueError(name + ' should be a list')
 
         super().__setattr__(name, value)
 
