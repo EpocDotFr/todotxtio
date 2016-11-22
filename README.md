@@ -28,25 +28,27 @@ import todotxtio
 
 ### Parsing
 
-You can parse todos from a file:
+Apart if you're building a new todo list from scratch, you'll need to get them from somewhere.
+
+The functions below all return a plain-old Python list filled with `Todo` objects (or an empty one if there's no todos).
+
+**Parsing from a file:**
 
 ```python
 todos = todotxtio.from_file('todo.txt')
 ```
 
-Or from a string, why not:
+**Parsing from a string:**
 
 ```python
 todos = todotxtio.from_string(my_string_full_of_todos)
 ```
 
-Or even from an already opened stream:
+**Parsing from an already-opened stream:**
 
 ```python
-todos = todotxtio.from_stream(my_stream_full_of_todos) # Will also close the stream
+todos = todotxtio.from_stream(my_stream_full_of_todos, close=False) # Will not close the stream
 ```
-
-They all return a plain-old Python list filled with `Todo` objects (or an empty one if there's no todos).
 
 ### `Todo` object
 
@@ -94,7 +96,7 @@ todos = []
 
 todos.append(todotxtio.Todo(text='A todo in its simplest form!'))
 
-# Updating the completion of the first todo in the todos list
+# Updating the completion of the first todo in the todo list (plain Python syntax)
 todos[0].completed = True
 
 # Adding a new todo
@@ -102,8 +104,6 @@ todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
 
 # Remove a todo
 del todos[0]
-
-# Make something with todos like exporting them to a file with todotxtio.to_file (see below)
 ```
 
 #### Projects and contexts
@@ -168,9 +168,34 @@ This is also applicable to the `Todo` constructor.
 
 Of course, inverse is also applicable (setting `completed` to `False` removes the completion date).
 
+#### Searching a todo list
+
+You can search in a given todo list using the handy `todotxtio.search` with its filter criteria. It takes the
+exact same parameters as the Todo object constructor, and return a list of `Todo` objects as well. All criteria
+defaults to `None`.
+
+```python
+# my_todos is a list of Todo objects
+
+results = todotxtio.search(my_todos,
+    priority=['A'], # priority, contexts and projects criteria are always lists (or None as said above)
+    contexts=['home'],
+    projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
+    completed=True,
+    completion_date='2016-11-20',
+    creation_date='2016-11-15',
+    text='todo content' # Will try to find this string in the todo text content
+)
+```
+
+A todo will be returned in the results list if at least one of the criteria matches. From the moment when a
+todo is sent in the results list, it will never be checked again against other criteria.
+
 ### Writing
 
-Write todos to a file:
+At some point you'll need to save your todo list.
+
+**Writing to a file:**
 
 ```python
 # my_todos is a list of Todo objects
@@ -180,7 +205,7 @@ todotxtio.to_file('todo.txt', my_todos)
 
 **Caution:** This will overwrite the whole file.
 
-Also, you can write to a string:
+**Export all todos to string:**
 
 ```python
 # my_todos is a list of Todo objects
@@ -188,13 +213,13 @@ Also, you can write to a string:
 my_string_full_of_todos = todotxtio.to_string(my_todos)
 ```
 
-Or even to an already opened stream:
+**Writing to an already-opened stream:**
 
 ```python
 # my_todos is a list of Todo objects
-# my_stream is an already opened stream
+# my_stream is an already-opened stream
 
-todotxtio.to_stream(my_stream, my_todos) # Will also close the stream
+todotxtio.to_stream(my_stream, my_todos, close=False) # Will not close the stream
 ```
 
 ## Gotchas

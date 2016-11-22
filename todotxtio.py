@@ -6,14 +6,15 @@ todo_project_regex = re.compile(' \+(\w+)')
 todo_context_regex = re.compile(' @(\w+)')
 
 
-def from_stream(stream):
-    """Load a todo list from an already opened stream.
+def from_stream(stream, close=True):
+    """Load a todo list from an already-opened stream.
 
     :return: A list of Todo objects
     """
     string = stream.read()
 
-    stream.close()
+    if close:
+        stream.close()
 
     return from_string(string)
 
@@ -74,10 +75,12 @@ def from_string(string):
     return todos
 
 
-def to_stream(stream, todos):
-    """Write a list of todos to an already opened stream."""
+def to_stream(stream, todos, close=True):
+    """Write a list of todos to an already-opened stream."""
     stream.write(to_string(todos))
-    stream.close()
+
+    if close:
+        stream.close()
 
 
 def to_file(file_path, todos):
@@ -144,7 +147,7 @@ class Todo:
         super().__setattr__(name, value)
 
     def __str__(self):
-        """Convert this Todo object in a valid Todo.txt todo line."""
+        """Convert this Todo object in a valid Todo.txt line."""
         ret = []
 
         if self.completed:
@@ -174,51 +177,37 @@ class Todo:
         return self.__str__()
 
 
-class TodoList:
-    """Used to perform advanced operations with a list of Todo objects."""
-    todos = []
+def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+    """Return a list of todos that matches the provided filters."""
+    results = []
 
-    def __init__(self, todos):
-        self.todos = todos
+    for todo in todos:
+        if text is not None and text in todo.text:
+            results.append(todo)
+            continue
 
-    def search(self, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
-        """Return a list of todos that matches the filters."""
-        results = []
+        if completed is not None and todo.completed == completed:
+            results.append(todo)
+            continue
 
-        for todo in self.todos:
-            if text is not None and text in todo.text:
-                results.append(todo)
-                continue
+        if completion_date is not None and todo.completion_date == completion_date:
+            results.append(todo)
+            continue
 
-            if completed is not None and todo.completed == completed:
-                results.append(todo)
-                continue
+        if priority is not None and todo.priority in priority:
+            results.append(todo)
+            continue
 
-            if completion_date is not None and todo.completion_date == completion_date:
-                results.append(todo)
-                continue
+        if creation_date is not None and todo.creation_date == creation_date:
+            results.append(todo)
+            continue
 
-            if priority is not None and todo.priority in priority:
-                results.append(todo)
-                continue
+        if projects is not None and any(i in projects for i in todo.projects):
+            results.append(todo)
+            continue
 
-            if creation_date is not None and todo.creation_date == creation_date:
-                results.append(todo)
-                continue
+        if contexts is not None and any(i in contexts for i in todo.contexts):
+            results.append(todo)
+            continue
 
-            if projects is not None and any(i in projects for i in todo.projects):
-                results.append(todo)
-                continue
-
-            if contexts is not None and any(i in contexts for i in todo.contexts):
-                results.append(todo)
-                continue
-
-        return results
-
-    def __setattr__(self, name, value):
-        if name == 'todos':
-            if type(value) is not list: # Make sure that the provided value is a list
-                raise ValueError(name + ' should be a list of Todo objects')
-
-        super().__setattr__(name, value)
+    return results
