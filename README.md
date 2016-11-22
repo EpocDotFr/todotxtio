@@ -172,7 +172,7 @@ Of course, inverse is also applicable (setting `completed` to `False` removes th
 
 You can search in a given todo list using the handy `todotxtio.search` with its filter criteria. It takes the
 exact same parameters as the Todo object constructor, and return a list of `Todo` objects as well. All criteria
-defaults to `None` which means taht the criteria is ignored.
+defaults to `None` which means that the criteria is ignored.
 
 ```python
 # my_todos is a list of Todo objects
