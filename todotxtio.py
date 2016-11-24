@@ -6,6 +6,11 @@ todo_project_regex = re.compile(' \+(\w+)')
 todo_context_regex = re.compile(' @(\w+)')
 
 
+def from_dicts(todos):
+    """Convert a list of todo dicts to a list of Todo objects."""
+    return [Todo(**todo) for todo in todos]
+
+
 def from_stream(stream, close=True):
     """Load a todo list from an already-opened stream.
 
@@ -75,6 +80,11 @@ def from_string(string):
     return todos
 
 
+def to_dicts(todos):
+    """Convert a list of Todo objects to a list of todo dict."""
+    return [todo.to_dict() for todo in todos]
+
+
 def to_stream(stream, todos, close=True):
     """Write a list of todos to an already-opened stream."""
     stream.write(to_string(todos))
@@ -127,6 +137,18 @@ class Todo:
         self.creation_date = creation_date
         self.projects = projects
         self.contexts = contexts
+
+    def to_dict(self):
+        """Return a dict representation of this Todo instance."""
+        return {
+            'text': self.text,
+            'completed': self.completed,
+            'completion_date': self.completion_date,
+            'priority': self.priority,
+            'creation_date': self.creation_date,
+            'projects': self.projects,
+            'contexts': self.contexts
+        }
 
     def __setattr__(self, name, value):
         if name == 'completed':

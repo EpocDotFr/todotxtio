@@ -41,13 +41,19 @@ todos = todotxtio.from_file('todo.txt')
 **Parsing from a string:**
 
 ```python
-todos = todotxtio.from_string(my_string_full_of_todos)
+todos = todotxtio.from_string(string_full_of_todos)
 ```
 
 **Parsing from an already-opened stream:**
 
 ```python
-todos = todotxtio.from_stream(my_stream_full_of_todos, close=False) # Will not close the stream
+todos = todotxtio.from_stream(stream_full_of_todos, close=False) # Will not close the stream
+```
+
+**Importing from a list of todo dicts (e.g result of a JSON parsing):**
+
+```python
+todos = todotxtio.from_dicts(todo_dicts)
 ```
 
 ### `Todo` object
@@ -104,6 +110,29 @@ todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
 
 # Remove a todo
 del todos[0]
+```
+
+#### Todo dicts
+
+You can export a `Todo` to a Python dict. Keys and values are exactly the same as the `Todo` constructor:
+
+```python
+# todo is a Todo instance
+
+todo_dict = todo.to_dict()
+```
+
+And vice-versa, you can instantiate a `Todo` object from a dict using the standard Python way:
+
+```python
+todo_dict = {
+    'text': 'Hey ho!',
+    'completed': True,
+    'priority': 'D',
+    'projects': ['blah']
+}
+
+todo = todotxtio.Todo(**todo_dict)
 ```
 
 #### Projects and contexts
@@ -175,9 +204,9 @@ exact same parameters as the Todo object constructor, and return a list of `Todo
 defaults to `None` which means that the criteria is ignored.
 
 ```python
-# my_todos is a list of Todo objects
+# todos is a list of Todo objects
 
-results = todotxtio.search(my_todos,
+results = todotxtio.search(todos,
     priority=['A'], # priority, contexts and projects criteria are always lists (or None as said above)
     contexts=['home'],
     projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
@@ -198,9 +227,9 @@ At some point you'll need to save your todo list.
 **Writing to a file:**
 
 ```python
-# my_todos is a list of Todo objects
+# todos is a list of Todo objects
 
-todotxtio.to_file('todo.txt', my_todos)
+todotxtio.to_file('todo.txt', todos)
 ```
 
 **Caution:** This will overwrite the whole file.
@@ -208,18 +237,26 @@ todotxtio.to_file('todo.txt', my_todos)
 **Export all todos to string:**
 
 ```python
-# my_todos is a list of Todo objects
+# todos is a list of Todo objects
 
-my_string_full_of_todos = todotxtio.to_string(my_todos)
+string_full_of_todos = todotxtio.to_string(todos)
 ```
 
 **Writing to an already-opened stream:**
 
 ```python
-# my_todos is a list of Todo objects
-# my_stream is an already-opened stream
+# todos is a list of Todo objects
+# stream is an already-opened stream
 
-todotxtio.to_stream(my_stream, my_todos, close=False) # Will not close the stream
+todotxtio.to_stream(stream, todos, close=False) # Will not close the stream
+```
+
+**Convert to a list of todo dicts (e.g to serialize them to JSON):**
+
+```python
+# todos is a list of Todo objects
+
+todo_dicts = todotxtio.to_dicts(todos)
 ```
 
 ## Gotchas
