@@ -21,7 +21,7 @@ def from_stream(stream, close=True):
     if close:
         stream.close()
 
-    return from_string(string)
+    return from_string(string.strip())
 
 
 def from_file(file_path):
