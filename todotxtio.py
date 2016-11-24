@@ -30,7 +30,7 @@ def from_file(file_path):
     :return: A list of Todo objects
     """
     if not os.path.isfile(file_path):
-        raise FileNotFoundError(file_path)
+        raise FileNotFoundError('File doesn\'t exists: ' + file_path)
 
     stream = open(file_path, 'r')
 
