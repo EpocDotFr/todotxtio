@@ -53,7 +53,10 @@ def from_string(string):
             todo_pre_data = todo_pre_data[0]
 
             todo.completed = todo_pre_data[1] == 'x'
-            todo.completion_date = todo_pre_data[3]
+
+            if todo_pre_data[3]:
+                todo.completion_date = todo_pre_data[3]
+            
             todo.priority = todo_pre_data[5]
             todo.creation_date = todo_pre_data[7]
 
