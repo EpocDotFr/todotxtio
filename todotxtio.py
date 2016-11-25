@@ -133,7 +133,7 @@ class Todo:
         self.text = text
         self.completed = completed
 
-        if completion_date:
+        if completion_date and self.completed:
             self.completion_date = completion_date
 
         self.priority = priority
