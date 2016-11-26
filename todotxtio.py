@@ -49,6 +49,8 @@ def from_string(string):
     lines.sort()
 
     for line in lines:
+        line = line.strip()
+        
         todo_pre_data = todo_data_regex.findall(line)
 
         todo = Todo()
@@ -64,7 +66,7 @@ def from_string(string):
             todo.priority = todo_pre_data[5]
             todo.creation_date = todo_pre_data[7]
 
-            text = todo_data_regex.sub('', line)
+            text = todo_data_regex.sub('', line).strip()
         else:
             text = line
 
@@ -72,13 +74,13 @@ def from_string(string):
 
         if len(todo_projects) > 0:
             todo.projects = todo_projects
-            text = todo_project_regex.sub('', text)
+            text = todo_project_regex.sub('', text).strip()
 
         todo_contexts = todo_context_regex.findall(text)
 
         if len(todo_contexts) > 0:
             todo.contexts = todo_contexts
-            text = todo_context_regex.sub('', text)
+            text = todo_context_regex.sub('', text).strip()
 
         todo.text = text
 
