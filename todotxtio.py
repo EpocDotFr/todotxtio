@@ -1,9 +1,10 @@
 import os
 import re
 
-todo_pre_data_regex = re.compile('^((x) )?((\d{4}[-/]\d{2}[-/]\d{2}) )?(\(([A-Z])\) )?((\d{4}[-/]\d{2}[-/]\d{2}) )?')
-todo_project_regex = re.compile(' \+(\w+)')
-todo_context_regex = re.compile(' @(\w+)')
+todo_data_regex = re.compile('^((x) )?((\d{4}-\d{2}-\d{2}) )?(\(([A-Z])\) )?((\d{4}-\d{2}-\d{2}) )?')
+todo_project_regex = re.compile('\+(\S*\w)')
+todo_context_regex = re.compile('@(\S*\w)')
+todo_tag_regex = re.compile('([^:]+):(.+)')
 
 
 def from_dicts(todos):
@@ -48,7 +49,7 @@ def from_string(string):
     lines.sort()
 
     for line in lines:
-        todo_pre_data = todo_pre_data_regex.findall(line)
+        todo_pre_data = todo_data_regex.findall(line)
 
         todo = Todo()
 
@@ -63,7 +64,7 @@ def from_string(string):
             todo.priority = todo_pre_data[5]
             todo.creation_date = todo_pre_data[7]
 
-            text = todo_pre_data_regex.sub('', line)
+            text = todo_data_regex.sub('', line)
         else:
             text = line
 
