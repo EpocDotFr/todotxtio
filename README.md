@@ -38,6 +38,8 @@ The functions below all return a plain-old Python list filled with `Todo` object
 todos = todotxtio.from_file('todo.txt')
 ```
 
+**Note:** The Todo.txt file is assumed to be UTF-8 encoded.
+
 **Parsing from a string:**
 
 ```python
@@ -232,7 +234,7 @@ At some point you'll need to save your todo list.
 todotxtio.to_file('todo.txt', todos)
 ```
 
-**Caution:** This will overwrite the whole file.
+**Caution:** This will overwrite the whole file. Also, data will be UTF-8 encoded.
 
 **Export all todos to string:**
 

@@ -32,7 +32,7 @@ def from_file(file_path):
     if not os.path.isfile(file_path):
         raise FileNotFoundError('File doesn\'t exists: ' + file_path)
 
-    stream = open(file_path, 'r')
+    stream = open(file_path, 'r', encoding='utf-8')
 
     return from_stream(stream)
 
@@ -101,7 +101,7 @@ def to_stream(stream, todos, close=True):
 
 def to_file(file_path, todos):
     """Write a list of todos to a file."""
-    stream = open(file_path, 'w')
+    stream = open(file_path, 'w', encoding='utf-8')
     to_stream(stream, todos)
 
 
