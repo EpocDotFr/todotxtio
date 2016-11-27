@@ -22,7 +22,7 @@ def from_stream(stream, close=True):
     if close:
         stream.close()
 
-    return from_string(string.strip())
+    return from_string(string)
 
 
 def from_file(file_path):
@@ -45,7 +45,7 @@ def from_string(string):
     """
     todos = []
     
-    lines = string.splitlines()
+    lines = string.strip().splitlines()
     lines.sort()
 
     for line in lines:
