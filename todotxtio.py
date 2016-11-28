@@ -1,10 +1,10 @@
 import os
 import re
 
-todo_data_regex = re.compile('^((x) )?((\d{4}-\d{2}-\d{2}) )?(\(([A-Z])\) )?((\d{4}-\d{2}-\d{2}) )?')
-todo_project_regex = re.compile('\+(\S*\w)')
-todo_context_regex = re.compile('@(\S*\w)')
-todo_tag_regex = re.compile('([^:]+):(.+)')
+todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
+todo_project_regex = re.compile(' \+(\S*\w)')
+todo_context_regex = re.compile(' @(\S*\w)')
+todo_tag_regex = re.compile(' (\S*):(\S*\w)')
 
 
 def from_dicts(todos):
@@ -51,20 +51,18 @@ def from_string(string):
     for line in lines:
         line = line.strip()
         
-        todo_pre_data = todo_data_regex.findall(line)
+        todo_pre_data = todo_data_regex.match(line)
 
         todo = Todo()
 
-        if len(todo_pre_data) == 1:
-            todo_pre_data = todo_pre_data[0]
+        if todo_pre_data:
+            todo.completed = todo_pre_data.group(1) == 'x'
 
-            todo.completed = todo_pre_data[1] == 'x'
-
-            if todo_pre_data[3]:
-                todo.completion_date = todo_pre_data[3]
+            if todo.completed and todo_pre_data.group(2):
+                todo.completion_date = todo_pre_data.group(2)
             
-            todo.priority = todo_pre_data[5]
-            todo.creation_date = todo_pre_data[7]
+            todo.priority = todo_pre_data.group(3)
+            todo.creation_date = todo_pre_data.group(4)
 
             text = todo_data_regex.sub('', line).strip()
         else:
