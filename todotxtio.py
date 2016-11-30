@@ -44,8 +44,11 @@ def from_string(string):
     :return: A list of Todo objects
     """
     todos = []
+    
+    lines = string.strip().splitlines()
+    lines.sort()
 
-    for line in string.strip().splitlines():
+    for line in lines:
         line = line.strip()
         
         todo_pre_data = todo_data_regex.match(line)
