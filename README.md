@@ -199,6 +199,32 @@ This is also applicable to the `Todo` constructor.
 
 Of course, inverse is also applicable (setting `completed` to `False` removes the completion date).
 
+#### Tags
+
+Tags, also called add-ons metadata, are lists of key/value represented by a tuple. They allow you to easily
+define and retrieve custom data:
+
+```python
+todo = todotxtio.Todo(
+    text='Thank Guido for such an awesome programming language'
+)
+
+todo.tags = [ # Define some tags
+    ('key', 'value'),
+    ('second', 'tag')
+]
+
+todo.tags.append(('due', '2016-12-01')) # Append to existing
+
+# Remove a tag
+del todo.tags[1]
+
+print(todo) # Thank Guido for such an awesome programming language key:value due:2016-12-01
+
+# Empty tags
+todo.tags = [] # Or None
+```
+
 #### Searching a todo list
 
 You can search in a given todo list using the handy `todotxtio.search` with its filter criteria. It takes the
@@ -219,8 +245,8 @@ results = todotxtio.search(todos,
 )
 ```
 
-A todo will be returned in the results list if at least one of the criteria matches. From the moment when a
-todo is sent in the results list, it will never be checked again against other criteria.
+A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in
+the results list, it will never be checked again.
 
 ### Writing
 

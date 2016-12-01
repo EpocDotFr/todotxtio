@@ -1,10 +1,10 @@
 import os
 import re
 
-todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
-todo_project_regex = re.compile(' \+(\S*\w)')
-todo_context_regex = re.compile(' @(\S*\w)')
-todo_tag_regex = re.compile(' (\S*):(\S*\w)')
+todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?(\S*)')
+todo_project_regex = re.compile(' \+(\S*)')
+todo_context_regex = re.compile(' @(\S*)')
+todo_tag_regex = re.compile(' (\S*):(\S*)')
 
 
 def from_dicts(todos):
@@ -81,6 +81,12 @@ def from_string(string):
             todo.contexts = todo_contexts
             text = todo_context_regex.sub('', text).strip()
 
+        todo_tags = todo_tag_regex.findall(text)
+
+        if len(todo_tags) > 0:
+            todo.tags = todo_tags
+            text = todo_tag_regex.sub('', text).strip()
+
         todo.text = text
 
         todos.append(todo)
@@ -125,6 +131,7 @@ class Todo:
     :param str creation_date: A create date, in the YYYY-MM-DD format (default to None)
     :param list projects: A list of projects without + (default to an empty list)
     :param list contexts: A list of projects without @ (default to an empty list)
+    :param list tags: A list of tags (default to an empty list)
     """
     text = None
     completed = False
@@ -133,8 +140,9 @@ class Todo:
     creation_date = None
     projects = []
     contexts = []
+    tags = []
 
-    def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+    def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
         self.text = text
         self.completed = completed
 
@@ -145,6 +153,7 @@ class Todo:
         self.creation_date = creation_date
         self.projects = projects
         self.contexts = contexts
+        self.tags = tags
 
     def to_dict(self):
         """Return a dict representation of this Todo instance."""
@@ -155,7 +164,8 @@ class Todo:
             'priority': self.priority,
             'creation_date': self.creation_date,
             'projects': self.projects,
-            'contexts': self.contexts
+            'contexts': self.contexts,
+            'tags': self.tags,
         }
 
     def __setattr__(self, name, value):
@@ -167,9 +177,9 @@ class Todo:
                 super().__setattr__('completed', True) # Setting the completion date must set this todo as completed...
             else:
                 super().__setattr__('completed', False) # ...and vice-versa
-        elif name in ['projects', 'contexts']:
+        elif name in ['projects', 'contexts', 'tags']:
             if not value:
-                super().__setattr__(name, []) # Force contexts and projects to be lists when setting them to a falsely value
+                super().__setattr__(name, []) # Force contexts, projects and tags to be lists when setting them to a falsely value
                 return
             elif type(value) is not list: # Make sure, otherwise, that the provided value is a list
                 raise ValueError(name + ' should be a list')
@@ -200,6 +210,9 @@ class Todo:
         if self.contexts:
             ret.append(''.join([' @' + context for context in self.contexts]).strip())
 
+        if self.tags:
+            ret.append(''.join([' ' + tag[0] + ':' + tag[1] for tag in self.tags]).strip())
+
         return ' '.join(ret)
 
     def __repr__(self):
@@ -207,7 +220,7 @@ class Todo:
         return self.__str__()
 
 
-def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
     """Return a list of todos that matches the provided filters."""
     results = []
 
@@ -237,6 +250,10 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
             continue
 
         if contexts is not None and any(i in contexts for i in todo.contexts):
+            results.append(todo)
+            continue
+
+        if tags is not None and any(i in tags for i in todo.tags):
             results.append(todo)
             continue
 
