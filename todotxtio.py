@@ -1,7 +1,7 @@
 import os
 import re
 
-todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?(\S*)')
+todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')
 todo_tag_regex = re.compile(' (\S*):(\S*)')
@@ -25,7 +25,7 @@ def from_stream(stream, close=True):
     return from_string(string)
 
 
-def from_file(file_path):
+def from_file(file_path, encoding='utf-8'):
     """Load a todo list from a file.
 
     :return: A list of Todo objects
@@ -33,7 +33,7 @@ def from_file(file_path):
     if not os.path.isfile(file_path):
         raise FileNotFoundError('File doesn\'t exists: ' + file_path)
 
-    stream = open(file_path, 'r', encoding='utf-8')
+    stream = open(file_path, 'r', encoding=encoding)
 
     return from_stream(stream)
 
@@ -107,9 +107,9 @@ def to_stream(stream, todos, close=True):
         stream.close()
 
 
-def to_file(file_path, todos):
+def to_file(file_path, todos, encoding='utf-8'):
     """Write a list of todos to a file."""
-    stream = open(file_path, 'w', encoding='utf-8')
+    stream = open(file_path, 'w', encoding=encoding)
     to_stream(stream, todos)
 
 
@@ -220,41 +220,35 @@ class Todo:
         return self.__str__()
 
 
-def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
+def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
     """Return a list of todos that matches the provided filters."""
     results = []
 
     for todo in todos:
-        if text is not None and text in todo.text:
-            results.append(todo)
-            continue
+        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = True
 
-        if completed is not None and todo.completed == completed:
-            results.append(todo)
-            continue
+        if text is not None:
+            text_match = text in todo.text
 
-        if completion_date is not None and todo.completion_date == completion_date:
-            results.append(todo)
-            continue
+        if completed is not None:
+            completed_match = todo.completed == completed
 
-        if priority is not None and todo.priority in priority:
-            results.append(todo)
-            continue
+        if completion_date is not None:
+            completion_date_match = todo.completion_date == completion_date
 
-        if creation_date is not None and todo.creation_date == creation_date:
-            results.append(todo)
-            continue
+        if priority is not None:
+            priority_match = todo.priority in priority
 
-        if projects is not None and any(i in projects for i in todo.projects):
-            results.append(todo)
-            continue
+        if creation_date is not None:
+            creation_date_match = todo.creation_date == creation_date
 
-        if contexts is not None and any(i in contexts for i in todo.contexts):
-            results.append(todo)
-            continue
+        if projects is not None:
+            projects_match = any(i in projects for i in todo.projects)
 
-        if tags is not None and any(i in tags for i in todo.tags):
+        if contexts is not None:
+            contexts_match = any(i in contexts for i in todo.contexts)
+
+        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match:
             results.append(todo)
-            continue
 
     return results

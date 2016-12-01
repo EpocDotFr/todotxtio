@@ -235,7 +235,7 @@ defaults to `None` which means that the criteria is ignored.
 # todos is a list of Todo objects
 
 results = todotxtio.search(todos,
-    priority=['A'], # priority, contexts and projects criteria are always lists (or None as said above)
+    priority=['A', 'C'], # priority, contexts and projects criteria are always lists (or None as said above)
     contexts=['home'],
     projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
     completed=True,
