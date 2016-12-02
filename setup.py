@@ -9,6 +9,7 @@ setup(
     long_description='All you need to know is located `here <https://github.com/EpocDotFr/todotxtio>`_.',
     url='https://github.com/EpocDotFr/todotxtio',
     author='Maxime "Epoc" G.',
+    author_email='contact.nospam@epoc.nospam.fr',
     license='DBAD',
     classifiers=[
         'Development Status :: 4 - Beta',
