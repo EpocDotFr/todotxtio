@@ -1,6 +1,21 @@
 import os
 import re
 
+__version__ = '0.1.0'
+
+__all__ = [
+    'from_dicts',
+    'from_stream',
+    'from_file',
+    'from_string',
+    'to_dicts',
+    'to_stream',
+    'to_file',
+    'to_string',
+    'Todo',
+    'search',
+]
+
 todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')

@@ -1,27 +1,23 @@
 from setuptools import setup
 from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-with open(path.join(here, 'README.md')) as f:
-    long_description = f.read()
+import todotxtio
 
 setup(
     name='todotxtio',
-    version='0.1.0',
+    version=todotxtio.__version__,
     description='A simple Python module to parse, manipulate and write Todo.txt data',
-    long_description=long_description,
+    long_description='All you need to know is located `here <https://github.com/EpocDotFr/todotxtio>`_.',
     url='https://github.com/EpocDotFr/todotxtio',
     author='Maxime "Epoc" G.',
-    author_email='contact@epoc.fr',
     license='DBAD',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
-        'Programming Language :: Python :: 3'
+        'Programming Language :: Python :: 3',
+        'Operating System :: OS Independent'
     ],
     keywords='todotxt todo.txt file parse parser read reader',
     py_modules=['todotxtio'],
-    download_url='https://github.com/EpocDotFr/todotxtio/archive/0.1.0.tar.gz'
+    download_url='https://github.com/EpocDotFr/todotxtio/archive/todotxtio-{version}.tar.gz'.format(version=todotxtio.__version__)
 )
