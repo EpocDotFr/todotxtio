@@ -6,7 +6,7 @@ setup(
     name='todotxtio',
     version=todotxtio.__version__,
     description='A simple Python module to parse, manipulate and write Todo.txt data',
-    long_description='All you need to know is located `here <https://github.com/EpocDotFr/todotxtio>`_.',
+    long_description='You can find the documentation `here <https://github.com/EpocDotFr/todotxtio#readme>`_.',
     url='https://github.com/EpocDotFr/todotxtio',
     author='Maxime "Epoc" G.',
     author_email='contact.nospam@epoc.nospam.fr',

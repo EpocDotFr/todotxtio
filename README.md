@@ -2,20 +2,26 @@
 
 A simple Python module to parse, manipulate and write [Todo.txt](http://todotxt.com/) data.
 
-[![PyPI](https://img.shields.io/pypi/v/todotxtio.svg)]() [![PyPI](https://img.shields.io/pypi/l/todotxtio.svg)]()
+[![PyPI](https://img.shields.io/pypi/pyversions/todotxtio.svg)]() [![PyPI](https://img.shields.io/pypi/v/todotxtio.svg)]() [![PyPI](https://img.shields.io/pypi/l/todotxtio.svg)]()
 
-This module 100% comply to the [Todo.txt specifications](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format). There aren't any unit tests, but trust me.
+This module tries to comply to the [Todo.txt specifications](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format) (disclaimer: there aren't any unit tests).
 
 ## Prerequisites
-
-[![PyPI](https://img.shields.io/pypi/pyversions/todotxtio.svg)]()
 
 Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback.
 
 ## Installation
 
+The usual way:
+
 ```
 pip install todotxtio
+```
+
+The McGyver way, after cloning/downloading this repo:
+
+```
+python setup.py install
 ```
 
 ## Usage
@@ -35,10 +41,8 @@ The functions below all return a plain-old Python list filled with `Todo` object
 **Parsing from a file:**
 
 ```python
-todos = todotxtio.from_file('todo.txt')
+todos = todotxtio.from_file('todo.txt', encoding='utf-8') # utf-8 is the default
 ```
-
-**Note:** The Todo.txt file is assumed to be UTF-8 encoded.
 
 **Parsing from a string:**
 
@@ -201,28 +205,28 @@ Of course, inverse is also applicable (setting `completed` to `False` removes th
 
 #### Tags
 
-Tags, also called add-ons metadata, are lists of key/value represented by a tuple. They allow you to easily
-define and retrieve custom data:
+Tags, also called add-ons metadata, are represented by a simple one-dimension dictionary. They allow you to easily
+define and retrieve custom formatted data:
 
 ```python
 todo = todotxtio.Todo(
     text='Thank Guido for such an awesome programming language'
 )
 
-todo.tags = [ # Define some tags
-    ('key', 'value'),
-    ('second', 'tag')
-]
+todo.tags = { # Define some tags
+    'key': 'value',
+    'second': 'tag'
+}
 
-todo.tags.append(('due', '2016-12-01')) # Append to existing
+todo.tags['due'] = '2016-12-01'
 
 # Remove a tag
-del todo.tags[1]
+del todo.tags['second']
 
 print(todo) # Thank Guido for such an awesome programming language key:value due:2016-12-01
 
 # Empty tags
-todo.tags = [] # Or None
+todo.tags = {} # Or None
 ```
 
 #### Searching a todo list
@@ -257,7 +261,7 @@ At some point you'll need to save your todo list.
 ```python
 # todos is a list of Todo objects
 
-todotxtio.to_file('todo.txt', todos)
+todotxtio.to_file('todo.txt', todos, encoding='utf-8') # utf-8 is the default
 ```
 
 **Caution:** This will overwrite the whole file. Also, data will be UTF-8 encoded.

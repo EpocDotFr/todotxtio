@@ -1,7 +1,7 @@
 import os
 import re
 
-__version__ = '0.1.0'
+__version__ = '0.2.0'
 
 __all__ = [
     'from_dicts',
@@ -99,7 +99,9 @@ def from_string(string):
         todo_tags = todo_tag_regex.findall(text)
 
         if len(todo_tags) > 0:
-            todo.tags = todo_tags
+            for todo_tag in todo_tags:
+                todo.tags[todo_tag[0]] = todo_tag[1]
+
             text = todo_tag_regex.sub('', text).strip()
 
         todo.text = text
@@ -146,7 +148,7 @@ class Todo:
     :param str creation_date: A create date, in the YYYY-MM-DD format (default to None)
     :param list projects: A list of projects without + (default to an empty list)
     :param list contexts: A list of projects without @ (default to an empty list)
-    :param list tags: A list of tags (default to an empty list)
+    :param list tags: A dict of tags (default to an empty dict)
     """
     text = None
     completed = False
@@ -155,7 +157,7 @@ class Todo:
     creation_date = None
     projects = []
     contexts = []
-    tags = []
+    tags = {}
 
     def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
         self.text = text
@@ -192,12 +194,18 @@ class Todo:
                 super().__setattr__('completed', True) # Setting the completion date must set this todo as completed...
             else:
                 super().__setattr__('completed', False) # ...and vice-versa
-        elif name in ['projects', 'contexts', 'tags']:
+        elif name in ['projects', 'contexts']:
             if not value:
-                super().__setattr__(name, []) # Force contexts, projects and tags to be lists when setting them to a falsely value
+                super().__setattr__(name, []) # Force contexts, projects to be lists when setting them to a falsely value
                 return
             elif type(value) is not list: # Make sure, otherwise, that the provided value is a list
                 raise ValueError(name + ' should be a list')
+        elif name == 'tags':
+            if not value:
+                super().__setattr__(name, {}) # Force tags to be a dict when setting them to a falsely value
+                return
+            elif type(value) is not dict: # Make sure, otherwise, that the provided value is a dict
+                raise ValueError(name + ' should be a dict')
 
         super().__setattr__(name, value)
 
@@ -226,7 +234,7 @@ class Todo:
             ret.append(''.join([' @' + context for context in self.contexts]).strip())
 
         if self.tags:
-            ret.append(''.join([' ' + tag[0] + ':' + tag[1] for tag in self.tags]).strip())
+            ret.append(''.join([' ' + tag_name + ':' + tag_value for tag_name, tag_value in self.tags.items()]).strip())
 
         return ' '.join(ret)
 
