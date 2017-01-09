@@ -293,19 +293,19 @@ todo_dicts = todotxtio.to_dicts(todos)
 
 ## Gotchas
 
-  - Projects and contexts will always be appended to the end of each todos when exporting them. This means that if you're parsing such a todo:
+  - Projects, contexts and tags will always be appended to the end of each todos when exporting them. This means that if you're parsing such a todo:
 
 ```
-I'm in love with +python. Python @ftw guys
+I'm in love with +python. due:2016-12-01 Python @ftw guys
 ```
 
 And then if you're writing it to a file (without even modifying it), you'll end with:
 
 ```
-I'm in love with. Python guys +python @ftw
+I'm in love with. Python guys +python @ftw due:2016-12-01
 ```
 
-Not ideal, I know.
+Not ideal, I know (at least for projects and contexts).
 
   - This is my very first PyPI package.
 
