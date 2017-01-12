@@ -245,6 +245,7 @@ results = todotxtio.search(todos,
     completed=True,
     completion_date='2016-11-20',
     creation_date='2016-11-15',
+    tags={'due': '2016-12-01'}, # Tags are a dict, as usual (only one match, both key and value,  is required to return a todo in the results list)
     text='todo content' # Will try to find this string in the todo text content
 )
 ```

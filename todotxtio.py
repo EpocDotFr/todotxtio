@@ -148,7 +148,7 @@ class Todo:
     :param str creation_date: A create date, in the YYYY-MM-DD format (default to None)
     :param list projects: A list of projects without + (default to an empty list)
     :param list contexts: A list of projects without @ (default to an empty list)
-    :param list tags: A dict of tags (default to an empty dict)
+    :param dict tags: A dict of tags (default to an empty dict)
     """
     text = None
     completed = False
@@ -243,12 +243,12 @@ class Todo:
         return self.__str__()
 
 
-def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None):
+def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
     """Return a list of todos that matches the provided filters."""
     results = []
 
     for todo in todos:
-        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = True
+        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match =True
 
         if text is not None:
             text_match = text in todo.text
@@ -271,7 +271,10 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
         if contexts is not None:
             contexts_match = any(i in contexts for i in todo.contexts)
 
-        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match:
+        if tags is not None:
+            tags_match = any(todo.tags[k] == v for k, v in tags.items() if k in todo.tags)
+
+        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match and tags_match:
             results.append(todo)
 
     return results
