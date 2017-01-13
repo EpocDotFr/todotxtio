@@ -2,7 +2,7 @@
 
 A simple Python module to parse, manipulate and write [Todo.txt](http://todotxt.com/) data.
 
-[![PyPI](https://img.shields.io/pypi/pyversions/todotxtio.svg)]() [[![PyPI](https://img.shields.io/pypi/v/todotxtio.svg)]()](https://pypi.python.org/pypi/todotxtio) [[![PyPI](https://img.shields.io/pypi/l/todotxtio.svg)]()](https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md)
+![Python versions](https://img.shields.io/pypi/pyversions/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio) [![Version](https://img.shields.io/pypi/v/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio)]() [![License](https://img.shields.io/pypi/l/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio?link=https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md)]()
 
 This module tries to comply to the [Todo.txt specifications](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format) (disclaimer: there aren't any unit tests).
 
