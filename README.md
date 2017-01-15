@@ -2,7 +2,7 @@
 
 A simple Python module to parse, manipulate and write [Todo.txt](http://todotxt.com/) data.
 
-[![PyPI](https://img.shields.io/pypi/pyversions/todotxtio.svg)]() [[![PyPI](https://img.shields.io/pypi/v/todotxtio.svg)]()](https://pypi.python.org/pypi/todotxtio) [[![PyPI](https://img.shields.io/pypi/l/todotxtio.svg)]()](https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md)
+![Python versions](https://img.shields.io/pypi/pyversions/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio) [![Version](https://img.shields.io/pypi/v/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio)]() [![License](https://img.shields.io/pypi/l/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio?link=https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md)]()
 
 This module tries to comply to the [Todo.txt specifications](https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format) (disclaimer: there aren't any unit tests).
 
@@ -245,6 +245,7 @@ results = todotxtio.search(todos,
     completed=True,
     completion_date='2016-11-20',
     creation_date='2016-11-15',
+    tags={'due': '2016-12-01'}, # Tags are a dict, as usual (only one match, both key and value,  is required to return a todo in the results list)
     text='todo content' # Will try to find this string in the todo text content
 )
 ```
@@ -293,19 +294,19 @@ todo_dicts = todotxtio.to_dicts(todos)
 
 ## Gotchas
 
-  - Projects and contexts will always be appended to the end of each todos when exporting them. This means that if you're parsing such a todo:
+  - Projects, contexts and tags will always be appended to the end of each todos when exporting them. This means that if you're parsing such a todo:
 
 ```
-I'm in love with +python. Python @ftw guys
+I'm in love with +python. due:2016-12-01 Python @ftw guys
 ```
 
 And then if you're writing it to a file (without even modifying it), you'll end with:
 
 ```
-I'm in love with. Python guys +python @ftw
+I'm in love with. Python guys +python @ftw due:2016-12-01
 ```
 
-Not ideal, I know.
+Not ideal, I know (at least for projects and contexts).
 
   - This is my very first PyPI package.
 
