@@ -30,43 +30,24 @@ The McGyver way, after cloning/downloading this repo:
 Usage
 -----
 
-Firstly, import the module:
+Import the :mod:`todotxtio` module and you are ready to use any of its functions.
 
-```python
-import todotxtio
-```
+Parsing
+*******
 
-### Parsing
+The functions below all return a plain-old Python list filled with :class:`todotxtio.Todo` objects (or an empty one if there's no todos).
 
-Apart if you're building a new todo list from scratch, you'll need to get them from somewhere.
+.. code-block:: python
 
-The functions below all return a plain-old Python list filled with `Todo` objects (or an empty one if there's no todos).
+    import todotxtio
 
-**Parsing from a file:**
+    list_of_todos = todotxtio.from_file('todo.txt')
+    # Or: list_of_todos = todotxtio.from_string(string_full_of_todos)
+    # Or: list_of_todos = todotxtio.from_stream(stream_full_of_todos)
+    # Or: list_of_todos = todotxtio.from_dicts(list_of_todos_dict)
 
-```python
-todos = todotxtio.from_file('todo.txt', encoding='utf-8') # utf-8 is the default
-```
-
-**Parsing from a string:**
-
-```python
-todos = todotxtio.from_string(string_full_of_todos)
-```
-
-**Parsing from an already-opened stream:**
-
-```python
-todos = todotxtio.from_stream(stream_full_of_todos, close=False) # Will not close the stream
-```
-
-**Importing from a list of todo dicts (e.g result of a JSON parsing):**
-
-```python
-todos = todotxtio.from_dicts(todo_dicts)
-```
-
-### `Todo` object
+Manipulating todos
+******************
 
 #### Basics
 
@@ -233,30 +214,6 @@ print(todo) # Thank Guido for such an awesome programming language key:value due
 todo.tags = {} # Or None
 ```
 
-#### Searching a todo list
-
-You can search in a given todo list using the handy `todotxtio.search` with its filter criteria. It takes the
-exact same parameters as the Todo object constructor, and return a list of `Todo` objects as well. All criteria
-defaults to `None` which means that the criteria is ignored.
-
-```python
-# todos is a list of Todo objects
-
-results = todotxtio.search(todos,
-    priority=['A', 'C'], # priority, contexts and projects criteria are always lists (or None as said above)
-    contexts=['home'],
-    projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
-    completed=True,
-    completion_date='2016-11-20',
-    creation_date='2016-11-15',
-    tags={'due': '2016-12-01'}, # Tags are a dict, as usual (only one match, both key and value,  is required to return a todo in the results list)
-    text='todo content' # Will try to find this string in the todo text content
-)
-```
-
-A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in
-the results list, it will never be checked again.
-
 ### Writing
 
 At some point you'll need to save your todo list.
@@ -295,6 +252,43 @@ todotxtio.to_stream(stream, todos, close=False) # Will not close the stream
 
 todo_dicts = todotxtio.to_dicts(todos)
 ```
+
+Searching a todo list
+*********************
+
+You can search in a given todo list using the handy :func:`todotxtio.search` with its filter criteria. It takes the
+exact same parameters as the Todo object constructor, and return a list of :class:`todotxtio.Todo` objects as well. All criteria
+defaults to `None` which means that the criteria is ignored.
+
+.. code-block:: python
+
+    results = todotxtio.search(list_of_todos,
+        priority=['A', 'C'], # priority, contexts and projects criteria are always lists (or None as said above)
+        contexts=['home'],
+        projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
+        completed=True,
+        completion_date='2016-11-20',
+        creation_date='2016-11-15',
+        tags={'due': '2016-12-01'}, # Tags are a dict, as usual (only one match, both key and value, is required to return a todo in the results list)
+        text='todo content' # Will try to find this string in the todo text content
+    )
+
+A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in
+the results list, it will never be checked again.
+
+Writing
+*******
+
+Quite simple.
+
+.. code-block:: python
+
+    # list_of_todos is a list of Todo objects
+
+    todotxtio.to_file('todo.txt', list_of_todos)
+    # Or: string_full_of_todos = todotxtio.to_string(list_of_todos)
+    # Or: todotxtio.to_stream(stream, list_of_todos)
+    # Or: list_of_todos_dict = todotxtio.to_dicts(list_of_todos)
 
 Gotchas
 -------
