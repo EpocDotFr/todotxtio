@@ -295,13 +295,13 @@ Gotchas
 
   - Projects, contexts and tags will always be appended to the end of each todos when exporting them. This means that if you're parsing such a todo:
 
-.. code-block::
+.. code-block:: text
 
     I'm in love with +python. due:2016-12-01 Python @ftw guys
 
 And then if you're writing it to a file (without even modifying it), you'll end with:
 
-.. code-block::
+.. code-block:: text
 
     I'm in love with. Python guys +python @ftw due:2016-12-01
 
