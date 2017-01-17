@@ -46,212 +46,179 @@ The functions below all return a plain-old Python list filled with :class:`todot
     # Or: list_of_todos = todotxtio.from_stream(stream_full_of_todos)
     # Or: list_of_todos = todotxtio.from_dicts(list_of_todos_dict)
 
-Manipulating todos
-******************
+The :class:`todotxtio.Todo` class
+*********************************
 
-#### Basics
+Basics
+''''''
 
-Create a new todo by instantiating a `Todo` object. You can feed todo data via its constructor arguments (none are required):
+Create a new todo by instantiating a :class:`todotxtio.Todo` object. You can feed todo data via its constructor arguments (none are required):
 
-```python
-todo = todotxtio.Todo(
-    text='Thank Guido for such an awesome programming language',
-    priority='A',
-    creation_date='2016-11-20'
-)
+.. code-block:: python
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
-```
+    todo = todotxtio.Todo(
+        text='Thank Guido for such an awesome programming language',
+        priority='A',
+        creation_date='2016-11-20'
+    )
 
-Or you also can instantiate an empty (or partially-instantiated) `Todo` object and define its parameters later:
+    print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
 
-```python
-todo = todotxtio.Todo(
-    creation_date='2016-11-20' # For example only, but constructor can be empty and this can be defined later as well
-)
+Or you also can instantiate an empty (or partially-instantiated) :class:`todotxtio.Todo` object and define its parameters later:
 
-todo.text = 'Thank Guido for such an awesome programming language'
-todo.priority = 'A'
+.. code-block:: python
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
-```
+    todo = todotxtio.Todo(
+        creation_date='2016-11-20' # For example only, but constructor can be empty and this can be defined later as well
+    )
 
-Once a `Todo` is instantiated, you can use its attributes to modify its data.
+    todo.text = 'Thank Guido for such an awesome programming language'
+    todo.priority = 'A'
 
-```python
-# todo is a Todo instance
+    print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language
 
-todo.text = 'Hello, I\'m the new text'
-todo.priority = 'C'
-todo.creation_date = None # Deleting the creation date
-```
+Once a :class:`todotxtio.Todo` is instantiated, you can use its attributes to modify its data.
+
+.. code-block:: python
+
+    # todo is a Todo instance
+
+    todo.text = 'Hello, I\'m the new text'
+    todo.priority = 'C'
+    todo.creation_date = None # Deleting the creation date
 
 Playing with todo lists is easy, the same way when manipulating any Python lists:
 
-```python
-todos = []
+.. code-block:: python
 
-todos.append(todotxtio.Todo(text='A todo in its simplest form!'))
+    todos = []
 
-# Updating the completion of the first todo in the todo list (plain Python syntax)
-todos[0].completed = True
+    todos.append(todotxtio.Todo(text='A todo in its simplest form!'))
 
-# Adding a new todo
-todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
+    # Updating the completion of the first todo in the todo list (plain Python syntax)
+    todos[0].completed = True
 
-# Remove a todo
-del todos[0]
-```
+    # Adding a new todo
+    todos.append(todotxtio.Todo(text='A second todo in its simplest form!'))
 
-#### Todo dicts
+    # Remove a todo
+    del todos[0]
 
-You can export a `Todo` to a Python dict. Keys and values are exactly the same as the `Todo` constructor:
+Todo dicts
+''''''''''
 
-```python
-# todo is a Todo instance
+You can export a :class:`todotxtio.Todo` to a Python dict. Keys and values are exactly the same as the :class:`todotxtio.Todo` constructor:
 
-todo_dict = todo.to_dict()
-```
+.. code-block:: python
 
-And vice-versa, you can instantiate a `Todo` object from a dict using the standard Python way:
+    # todo is a Todo instance
 
-```python
-todo_dict = {
-    'text': 'Hey ho!',
-    'completed': True,
-    'priority': 'D',
-    'projects': ['blah']
-}
+    todo_dict = todo.to_dict()
 
-todo = todotxtio.Todo(**todo_dict)
-```
+And vice-versa, you can instantiate a :class:`todotxtio.Todo` object from a dict using the standard Python way:
 
-#### Projects and contexts
+.. code-block:: python
 
-They are both plain-old Python lists without leadings `+` and `@`:
+    todo_dict = {
+        'text': 'Hey ho!',
+        'completed': True,
+        'priority': 'D',
+        'projects': ['blah']
+    }
 
-```python
-todo = todotxtio.Todo(
-    text='Thank Guido for such an awesome programming language',
-    priority='A',
-    creation_date='2016-11-20'
-)
+    todo = todotxtio.Todo(**todo_dict)
 
-# Define some projects and contexts
-todo.projects = ['python']
-todo.contexts = ['awesomeness', 'ftw']
+Projects and contexts
+'''''''''''''''''''''
 
-# Append to existings projects or contexts
-todo.projects.append('awesome-project')
-todo.contexts.append('cool')
+They are both plain-old Python lists without leadings ``+`` and ``@``:
 
-# Remove a context
-todo.contexts.remove('cool')
+.. code-block:: python
 
-# Empty the projects list
-todo.projects = [] # Or None
+    todo = todotxtio.Todo(
+        text='Thank Guido for such an awesome programming language',
+        priority='A',
+        creation_date='2016-11-20'
+    )
 
-print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language @awesomeness @ftw
-```
+    # Define some projects and contexts
+    todo.projects = ['python']
+    todo.contexts = ['awesomeness', 'ftw']
 
-#### Todo completion
+    # Append to existings projects or contexts
+    todo.projects.append('awesome-project')
+    todo.contexts.append('cool')
 
-You can either mark a todo as completed by setting its `completed` attribute to `True`:
+    # Remove a context
+    todo.contexts.remove('cool')
 
-```python
-todo = todotxtio.Todo(
-    text='Thank Guido for such an awesome programming language',
-    priority='A',
-    creation_date='2016-11-20'
-)
+    # Empty the projects list
+    todo.projects = [] # Or None
 
-todo.completed = True
+    print(todo) # (A) 2016-11-20 Thank Guido for such an awesome programming language @awesomeness @ftw
 
-print(todo) # x (A) 2016-11-20 Thank Guido for such an awesome programming language
-```
+Todo completion
+'''''''''''''''
 
-Or by defining its completion date, which automatically set its `completed` attribute to `True`:
+You can either mark a todo as completed by setting its ``completed`` attribute to ``True``:
 
-```python
-todo = todotxtio.Todo(
-    text='Thank Guido for such an awesome programming language',
-    priority='A',
-    creation_date='2016-11-20'
-)
+.. code-block:: python
 
-todo.completion_date = '2016-12-01'
+    todo = todotxtio.Todo(
+        text='Thank Guido for such an awesome programming language',
+        priority='A',
+        creation_date='2016-11-20'
+    )
 
-print(todo) # x 2016-12-01 (A) 2016-11-20 Thank Guido for such an awesome programming language
-```
+    todo.completed = True
 
-This is also applicable to the `Todo` constructor.
+    print(todo) # x (A) 2016-11-20 Thank Guido for such an awesome programming language
 
-Of course, inverse is also applicable (setting `completed` to `False` removes the completion date).
+Or by defining its completion date, which automatically set its ``completed`` attribute to ``True``:
 
-#### Tags
+.. code-block:: python
+
+    todo = todotxtio.Todo(
+        text='Thank Guido for such an awesome programming language',
+        priority='A',
+        creation_date='2016-11-20'
+    )
+
+    todo.completion_date = '2016-12-01'
+
+    print(todo) # x 2016-12-01 (A) 2016-11-20 Thank Guido for such an awesome programming language
+
+This is also applicable to the :class:`todotxtio.Todo` constructor.
+
+Of course, inverse is also applicable (setting ``completed`` to ``False`` removes the completion date).
+
+Tags
+''''
 
 Tags, also called add-ons metadata, are represented by a simple one-dimension dictionary. They allow you to easily
 define and retrieve custom formatted data:
 
-```python
-todo = todotxtio.Todo(
-    text='Thank Guido for such an awesome programming language'
-)
+.. code-block:: python
 
-todo.tags = { # Define some tags
-    'key': 'value',
-    'second': 'tag'
-}
+    todo = todotxtio.Todo(
+        text='Thank Guido for such an awesome programming language'
+    )
 
-todo.tags['due'] = '2016-12-01'
+    todo.tags = { # Define some tags
+        'key': 'value',
+        'second': 'tag'
+    }
 
-# Remove a tag
-del todo.tags['second']
+    todo.tags['due'] = '2016-12-01'
 
-print(todo) # Thank Guido for such an awesome programming language key:value due:2016-12-01
+    # Remove a tag
+    del todo.tags['second']
 
-# Empty tags
-todo.tags = {} # Or None
-```
+    print(todo) # Thank Guido for such an awesome programming language key:value due:2016-12-01
 
-### Writing
+    # Empty tags
+    todo.tags = {} # Or None
 
-At some point you'll need to save your todo list.
-
-**Writing to a file:**
-
-```python
-# todos is a list of Todo objects
-
-todotxtio.to_file('todo.txt', todos, encoding='utf-8') # utf-8 is the default
-```
-
-**Caution:** This will overwrite the whole file. Also, data will be UTF-8 encoded.
-
-**Export all todos to string:**
-
-```python
-# todos is a list of Todo objects
-
-string_full_of_todos = todotxtio.to_string(todos)
-```
-
-**Writing to an already-opened stream:**
-
-```python
-# todos is a list of Todo objects
-# stream is an already-opened stream
-
-todotxtio.to_stream(stream, todos, close=False) # Will not close the stream
-```
-
-**Convert to a list of todo dicts (e.g to serialize them to JSON):**
-
-```python
-# todos is a list of Todo objects
-
-todo_dicts = todotxtio.to_dicts(todos)
-```
 
 Searching a todo list
 *********************

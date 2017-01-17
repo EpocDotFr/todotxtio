@@ -168,13 +168,13 @@ class Todo:
     """Represent one todo.
 
     :param str text: The text of the todo
-    :param bool completed: Should this todo be marked as completed or not (default to False)
-    :param str completion_date: A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True (default to None)
-    :param str priority: The priority of the todo represented by a char bewteen A-Z (default to None)
-    :param str creation_date: A create date, in the YYYY-MM-DD format (default to None)
-    :param list projects: A list of projects without + (default to an empty list)
-    :param list contexts: A list of projects without @ (default to an empty list)
-    :param dict tags: A dict of tags (default to an empty dict)
+    :param bool completed: Should this todo be marked as completed or not
+    :param str completion_date: A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True
+    :param str priority: The priority of the todo represented by a char between A-Z
+    :param str creation_date: A create date, in the YYYY-MM-DD format
+    :param list projects: A list of projects without +
+    :param list contexts: A list of projects without @
+    :param dict tags: A dict of tags
     """
     text = None
     completed = False
@@ -276,7 +276,7 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
     """Return a list of todos that matches the provided filters.
 
     It takes the exact same parameters as the :class:`todotxtio.Todo` object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
-    All criteria defaults to `None` which means that the criteria is ignored.
+    All criteria defaults to ``None`` which means that the criteria is ignored.
 
     A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in the results list, it will
     never be checked again.
