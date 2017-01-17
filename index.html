@@ -1,0 +1,557 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Todo.txt I/O documentation &#8212; Todo.txt I/O 0.2.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="Todo.txt I/O 0.2.1 documentation" href="#" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="todo-txt-i-o-documentation">
+<h1>Todo.txt I/O documentation<a class="headerlink" href="#todo-txt-i-o-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Welcome! This documentation is about Todo.txt I/O, a simple Python module to parse, manipulate and write <a class="reference external" href="http://todotxt.com/">Todo.txt</a> data.</p>
+<p><img alt="pyversion" src="https://img.shields.io/pypi/pyversions/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio" /> <img alt="pypiv" src="https://img.shields.io/pypi/v/todotxtio.svg?link=https://pypi.python.org/pypi/todotxtio" /> <img alt="pypil" src="https://img.shields.io/pypi/l/todotxtio.svg?link=https://github.com/EpocDotFr/todotxtio/blob/master/LICENSE.md" /></p>
+<p>This module tries to comply to the <a class="reference external" href="https://github.com/ginatrapani/todo.txt-cli/wiki/The-Todo.txt-Format">Todo.txt specifications</a> (disclaimer: there aren&#8217;t any unit tests).</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The usual way:</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> pip install todotxtio
+</pre></div>
+</div>
+<p>The McGyver way, after cloning/downloading this repo:</p>
+<div class="highlight-console"><div class="highlight"><pre><span></span><span class="gp">$</span> python setup.py install
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>Import the <a class="reference internal" href="#module-todotxtio" title="todotxtio"><code class="xref py py-mod docutils literal"><span class="pre">todotxtio</span></code></a> module and you are ready to use any of its functions.</p>
+<div class="section" id="parsing">
+<h3>Parsing<a class="headerlink" href="#parsing" title="Permalink to this headline">¶</a></h3>
+<p>The functions below all return a plain-old Python list filled with <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects (or an empty one if there&#8217;s no todos).</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">todotxtio</span>
+
+<span class="n">list_of_todos</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;todo.txt&#39;</span><span class="p">)</span>
+<span class="c1"># Or: list_of_todos = todotxtio.from_string(string_full_of_todos)</span>
+<span class="c1"># Or: list_of_todos = todotxtio.from_stream(stream_full_of_todos)</span>
+<span class="c1"># Or: list_of_todos = todotxtio.from_dicts(list_of_todos_dict)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-todotxtio-todo-class">
+<h3>The <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> class<a class="headerlink" href="#the-todotxtio-todo-class" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="basics">
+<h4>Basics<a class="headerlink" href="#basics" title="Permalink to this headline">¶</a></h4>
+<p>Create a new todo by instantiating a <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> object. You can feed todo data via its constructor arguments (none are required):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span><span class="p">,</span>
+    <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span>
+<span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># (A) 2016-11-20 Thank Guido for such an awesome programming language</span>
+</pre></div>
+</div>
+<p>Or you also can instantiate an empty (or partially-instantiated) <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> object and define its parameters later:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span> <span class="c1"># For example only, but constructor can be empty and this can be defined later as well</span>
+<span class="p">)</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># (A) 2016-11-20 Thank Guido for such an awesome programming language</span>
+</pre></div>
+</div>
+<p>Once a <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> is instantiated, you can use its attributes to modify its data.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># todo is a Todo instance</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;Hello, I</span><span class="se">\&#39;</span><span class="s1">m the new text&#39;</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="s1">&#39;C&#39;</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">creation_date</span> <span class="o">=</span> <span class="bp">None</span> <span class="c1"># Deleting the creation date</span>
+</pre></div>
+</div>
+<p>Playing with todo lists is easy, the same way when manipulating any Python lists:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todos</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">todos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;A todo in its simplest form!&#39;</span><span class="p">))</span>
+
+<span class="c1"># Updating the completion of the first todo in the todo list (plain Python syntax)</span>
+<span class="n">todos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">completed</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="c1"># Adding a new todo</span>
+<span class="n">todos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;A second todo in its simplest form!&#39;</span><span class="p">))</span>
+
+<span class="c1"># Remove a todo</span>
+<span class="k">del</span> <span class="n">todos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="todo-dicts">
+<h4>Todo dicts<a class="headerlink" href="#todo-dicts" title="Permalink to this headline">¶</a></h4>
+<p>You can export a <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> to a Python dict. Keys and values are exactly the same as the <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> constructor:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># todo is a Todo instance</span>
+
+<span class="n">todo_dict</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And vice-versa, you can instantiate a <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> object from a dict using the standard Python way:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Hey ho!&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;completed&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+    <span class="s1">&#39;priority&#39;</span><span class="p">:</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;projects&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;blah&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span><span class="o">**</span><span class="n">todo_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="projects-and-contexts">
+<h4>Projects and contexts<a class="headerlink" href="#projects-and-contexts" title="Permalink to this headline">¶</a></h4>
+<p>They are both plain-old Python lists without leadings <code class="docutils literal"><span class="pre">+</span></code> and <code class="docutils literal"><span class="pre">&#64;</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span><span class="p">,</span>
+    <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span>
+<span class="p">)</span>
+
+<span class="c1"># Define some projects and contexts</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">]</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">contexts</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;awesomeness&#39;</span><span class="p">,</span> <span class="s1">&#39;ftw&#39;</span><span class="p">]</span>
+
+<span class="c1"># Append to existings projects or contexts</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">projects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;awesome-project&#39;</span><span class="p">)</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">contexts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;cool&#39;</span><span class="p">)</span>
+
+<span class="c1"># Remove a context</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">contexts</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s1">&#39;cool&#39;</span><span class="p">)</span>
+
+<span class="c1"># Empty the projects list</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">projects</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Or None</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># (A) 2016-11-20 Thank Guido for such an awesome programming language @awesomeness @ftw</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="todo-completion">
+<h4>Todo completion<a class="headerlink" href="#todo-completion" title="Permalink to this headline">¶</a></h4>
+<p>You can either mark a todo as completed by setting its <code class="docutils literal"><span class="pre">completed</span></code> attribute to <code class="docutils literal"><span class="pre">True</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span><span class="p">,</span>
+    <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span>
+<span class="p">)</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">completed</span> <span class="o">=</span> <span class="bp">True</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># x (A) 2016-11-20 Thank Guido for such an awesome programming language</span>
+</pre></div>
+</div>
+<p>Or by defining its completion date, which automatically set its <code class="docutils literal"><span class="pre">completed</span></code> attribute to <code class="docutils literal"><span class="pre">True</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span><span class="p">,</span>
+    <span class="n">priority</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span>
+<span class="p">)</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">completion_date</span> <span class="o">=</span> <span class="s1">&#39;2016-12-01&#39;</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># x 2016-12-01 (A) 2016-11-20 Thank Guido for such an awesome programming language</span>
+</pre></div>
+</div>
+<p>This is also applicable to the <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> constructor.</p>
+<p>Of course, inverse is also applicable (setting <code class="docutils literal"><span class="pre">completed</span></code> to <code class="docutils literal"><span class="pre">False</span></code> removes the completion date).</p>
+</div>
+<div class="section" id="tags">
+<h4>Tags<a class="headerlink" href="#tags" title="Permalink to this headline">¶</a></h4>
+<p>Tags, also called add-ons metadata, are represented by a simple one-dimension dictionary. They allow you to easily
+define and retrieve custom formatted data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">todo</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">Todo</span><span class="p">(</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;Thank Guido for such an awesome programming language&#39;</span>
+<span class="p">)</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="p">{</span> <span class="c1"># Define some tags</span>
+    <span class="s1">&#39;key&#39;</span><span class="p">:</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;second&#39;</span><span class="p">:</span> <span class="s1">&#39;tag&#39;</span>
+<span class="p">}</span>
+
+<span class="n">todo</span><span class="o">.</span><span class="n">tags</span><span class="p">[</span><span class="s1">&#39;due&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2016-12-01&#39;</span>
+
+<span class="c1"># Remove a tag</span>
+<span class="k">del</span> <span class="n">todo</span><span class="o">.</span><span class="n">tags</span><span class="p">[</span><span class="s1">&#39;second&#39;</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">todo</span><span class="p">)</span> <span class="c1"># Thank Guido for such an awesome programming language key:value due:2016-12-01</span>
+
+<span class="c1"># Empty tags</span>
+<span class="n">todo</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Or None</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="searching-a-todo-list">
+<h3>Searching a todo list<a class="headerlink" href="#searching-a-todo-list" title="Permalink to this headline">¶</a></h3>
+<p>You can search in a given todo list using the handy <a class="reference internal" href="#todotxtio.search" title="todotxtio.search"><code class="xref py py-func docutils literal"><span class="pre">todotxtio.search()</span></code></a> with its filter criteria.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">list_of_todos</span><span class="p">,</span>
+    <span class="n">priority</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span>
+    <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;home&#39;</span><span class="p">],</span>
+    <span class="n">projects</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;todo&#39;</span><span class="p">],</span>
+    <span class="n">completed</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+    <span class="n">completion_date</span><span class="o">=</span><span class="s1">&#39;2016-11-20&#39;</span><span class="p">,</span>
+    <span class="n">creation_date</span><span class="o">=</span><span class="s1">&#39;2016-11-15&#39;</span><span class="p">,</span>
+    <span class="n">tags</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;due&#39;</span><span class="p">:</span> <span class="s1">&#39;2016-12-01&#39;</span><span class="p">},</span>
+    <span class="n">text</span><span class="o">=</span><span class="s1">&#39;todo content&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="writing">
+<h3>Writing<a class="headerlink" href="#writing" title="Permalink to this headline">¶</a></h3>
+<p>Quite simple.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># list_of_todos is a list of Todo objects</span>
+
+<span class="n">todotxtio</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="s1">&#39;todo.txt&#39;</span><span class="p">,</span> <span class="n">list_of_todos</span><span class="p">)</span>
+<span class="c1"># Or: string_full_of_todos = todotxtio.to_string(list_of_todos)</span>
+<span class="c1"># Or: todotxtio.to_stream(stream, list_of_todos)</span>
+<span class="c1"># Or: list_of_todos_dict = todotxtio.to_dicts(list_of_todos)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="gotchas">
+<h2>Gotchas<a class="headerlink" href="#gotchas" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>Projects, contexts and tags will always be appended to the end of each todos when exporting them. This means that if you&#8217;re parsing such a todo:</li>
+</ul>
+</div></blockquote>
+<div class="highlight-text"><div class="highlight"><pre><span></span>I&#39;m in love with +python. due:2016-12-01 Python @ftw guys
+</pre></div>
+</div>
+<p>And then if you&#8217;re writing it to a file (without even modifying it), you&#8217;ll end with:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>I&#39;m in love with. Python guys +python @ftw due:2016-12-01
+</pre></div>
+</div>
+<p>Not ideal, I know (at least for projects and contexts).</p>
+<blockquote>
+<div><ul class="simple">
+<li>This is my very first PyPI package.</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="module-todotxtio">
+<span id="api-docs"></span><h2>API docs<a class="headerlink" href="#module-todotxtio" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="todotxtio.from_dicts">
+<code class="descclassname">todotxtio.</code><code class="descname">from_dicts</code><span class="sig-paren">(</span><em>todos</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.from_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of todo dicts to a list of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of todo dicts</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.from_stream">
+<code class="descclassname">todotxtio.</code><code class="descname">from_stream</code><span class="sig-paren">(</span><em>stream</em>, <em>close=True</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.from_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a todo list from an already-opened stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stream</strong> (<em>file</em>) &#8211; A file-like object</li>
+<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.from_file">
+<code class="descclassname">todotxtio.</code><code class="descname">from_file</code><span class="sig-paren">(</span><em>file_path</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a todo list from a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Path to the file</li>
+<li><strong>encoding</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The encoding of the file to open</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.from_string">
+<code class="descclassname">todotxtio.</code><code class="descname">from_string</code><span class="sig-paren">(</span><em>string</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a todo list from a string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The string to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.to_dicts">
+<code class="descclassname">todotxtio.</code><code class="descname">to_dicts</code><span class="sig-paren">(</span><em>todos</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.to_dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects to a list of todo dict.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.to_stream">
+<code class="descclassname">todotxtio.</code><code class="descname">to_stream</code><span class="sig-paren">(</span><em>stream</em>, <em>todos</em>, <em>close=True</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.to_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a list of todos to an already-opened stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>stream</strong> (<em>file</em>) &#8211; A file-like object</li>
+<li><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects</li>
+<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)">None</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.to_file">
+<code class="descclassname">todotxtio.</code><code class="descname">to_file</code><span class="sig-paren">(</span><em>file_path</em>, <em>todos</em>, <em>encoding='utf-8'</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a list of todos to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Path to the file</li>
+<li><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects</li>
+<li><strong>encoding</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The encoding of the file to open</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.6)">None</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.to_string">
+<code class="descclassname">todotxtio.</code><code class="descname">to_string</code><span class="sig-paren">(</span><em>todos</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of todos to a string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="todotxtio.Todo">
+<em class="property">class </em><code class="descclassname">todotxtio.</code><code class="descname">Todo</code><span class="sig-paren">(</span><em>text=None</em>, <em>completed=False</em>, <em>completion_date=None</em>, <em>priority=None</em>, <em>creation_date=None</em>, <em>projects=None</em>, <em>contexts=None</em>, <em>tags=None</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.Todo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent one todo.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The text of the todo</li>
+<li><strong>completed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Should this todo be marked as completed or not</li>
+<li><strong>completion_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True</li>
+<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The priority of the todo represented by a char between A-Z</li>
+<li><strong>creation_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A create date, in the YYYY-MM-DD format</li>
+<li><strong>projects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without +</li>
+<li><strong>contexts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without &#64;</li>
+<li><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; A dict of tags</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="todotxtio.Todo.completed">
+<code class="descname">completed</code><em class="property"> = False</em><a class="headerlink" href="#todotxtio.Todo.completed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.completion_date">
+<code class="descname">completion_date</code><em class="property"> = None</em><a class="headerlink" href="#todotxtio.Todo.completion_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.contexts">
+<code class="descname">contexts</code><em class="property"> = []</em><a class="headerlink" href="#todotxtio.Todo.contexts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.creation_date">
+<code class="descname">creation_date</code><em class="property"> = None</em><a class="headerlink" href="#todotxtio.Todo.creation_date" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.priority">
+<code class="descname">priority</code><em class="property"> = None</em><a class="headerlink" href="#todotxtio.Todo.priority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.projects">
+<code class="descname">projects</code><em class="property"> = []</em><a class="headerlink" href="#todotxtio.Todo.projects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.tags">
+<code class="descname">tags</code><em class="property"> = {}</em><a class="headerlink" href="#todotxtio.Todo.tags" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="todotxtio.Todo.text">
+<code class="descname">text</code><em class="property"> = None</em><a class="headerlink" href="#todotxtio.Todo.text" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="todotxtio.Todo.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.Todo.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict representation of this Todo instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="todotxtio.search">
+<code class="descclassname">todotxtio.</code><code class="descname">search</code><span class="sig-paren">(</span><em>todos</em>, <em>text=None</em>, <em>completed=None</em>, <em>completion_date=None</em>, <em>priority=None</em>, <em>creation_date=None</em>, <em>projects=None</em>, <em>contexts=None</em>, <em>tags=None</em><span class="sig-paren">)</span><a class="headerlink" href="#todotxtio.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of todos that matches the provided filters.</p>
+<p>It takes the exact same parameters as the <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> object constructor, and return a list of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects as well.
+All criteria defaults to <code class="docutils literal"><span class="pre">None</span></code> which means that the criteria is ignored.</p>
+<p>A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in the results list, it will
+never be checked again.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; String to be found in the todo text</li>
+<li><strong>completed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Search for completed/uncompleted todos only</li>
+<li><strong>completion_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Match this completion date</li>
+<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of priorities to match</li>
+<li><strong>creation_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; Match this creation date</li>
+<li><strong>projects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of projects to match</li>
+<li><strong>contexts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of contexts to match</li>
+<li><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; Dict of tag to match</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Epoc.
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
