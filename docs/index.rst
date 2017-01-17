@@ -256,25 +256,20 @@ todo_dicts = todotxtio.to_dicts(todos)
 Searching a todo list
 *********************
 
-You can search in a given todo list using the handy :func:`todotxtio.search` with its filter criteria. It takes the
-exact same parameters as the Todo object constructor, and return a list of :class:`todotxtio.Todo` objects as well. All criteria
-defaults to `None` which means that the criteria is ignored.
+You can search in a given todo list using the handy :func:`todotxtio.search` with its filter criteria.
 
 .. code-block:: python
 
     results = todotxtio.search(list_of_todos,
-        priority=['A', 'C'], # priority, contexts and projects criteria are always lists (or None as said above)
+        priority=['A', 'C'],
         contexts=['home'],
-        projects=['python', 'todo'], # If giving a list to search for, only one match is required to return a todo in the results list
+        projects=['python', 'todo'],
         completed=True,
         completion_date='2016-11-20',
         creation_date='2016-11-15',
-        tags={'due': '2016-12-01'}, # Tags are a dict, as usual (only one match, both key and value, is required to return a todo in the results list)
-        text='todo content' # Will try to find this string in the todo text content
+        tags={'due': '2016-12-01'},
+        text='todo content'
     )
-
-A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in
-the results list, it will never be checked again.
 
 Writing
 *******

@@ -13,7 +13,7 @@ __all__ = [
     'to_file',
     'to_string',
     'Todo',
-    'search',
+    'search'
 ]
 
 todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
@@ -23,14 +23,20 @@ todo_tag_regex = re.compile(' (\S*):(\S*)')
 
 
 def from_dicts(todos):
-    """Convert a list of todo dicts to a list of Todo objects."""
+    """Convert a list of todo dicts to a list of :class:`todotxtio.Todo` objects.
+
+    :param list todos: A list of todo dicts
+    :rtype: list
+    """
     return [Todo(**todo) for todo in todos]
 
 
 def from_stream(stream, close=True):
     """Load a todo list from an already-opened stream.
 
-    :return: A list of Todo objects
+    :param file stream: A file-like object
+    :param bool close: Whetever to close the stream or not
+    :rtype: list
     """
     string = stream.read()
 
@@ -43,7 +49,9 @@ def from_stream(stream, close=True):
 def from_file(file_path, encoding='utf-8'):
     """Load a todo list from a file.
 
-    :return: A list of Todo objects
+    :param str file_path: Path to the file
+    :param str encoding: The encoding of the file to open
+    :rtype: list
     """
     if not os.path.isfile(file_path):
         raise FileNotFoundError('File doesn\'t exists: ' + file_path)
@@ -56,7 +64,8 @@ def from_file(file_path, encoding='utf-8'):
 def from_string(string):
     """Load a todo list from a string.
 
-    :return: A list of Todo objects
+    :param str string: The string to parse
+    :rtype: list
     """
     todos = []
 
@@ -112,12 +121,22 @@ def from_string(string):
 
 
 def to_dicts(todos):
-    """Convert a list of Todo objects to a list of todo dict."""
+    """Convert a list of :class:`todotxtio.Todo` objects to a list of todo dict.
+
+    :param list todos: List of :class:`todotxtio.Todo` objects
+    :rtype: list
+    """
     return [todo.to_dict() for todo in todos]
 
 
 def to_stream(stream, todos, close=True):
-    """Write a list of todos to an already-opened stream."""
+    """Write a list of todos to an already-opened stream.
+
+    :param file stream: A file-like object
+    :param list todos: List of :class:`todotxtio.Todo` objects
+    :param bool close: Whetever to close the stream or not
+    :rtype: None
+    """
     stream.write(to_string(todos))
 
     if close:
@@ -125,15 +144,22 @@ def to_stream(stream, todos, close=True):
 
 
 def to_file(file_path, todos, encoding='utf-8'):
-    """Write a list of todos to a file."""
+    """Write a list of todos to a file.
+
+    :param str file_path: Path to the file
+    :param list todos: List of :class:`todotxtio.Todo` objects
+    :param str encoding: The encoding of the file to open
+    :rtype: None
+    """
     stream = open(file_path, 'w', encoding=encoding)
     to_stream(stream, todos)
 
 
 def to_string(todos):
-    """Return a list of todos as a string.
+    """Convert a list of todos to a string.
 
-    :return: The todo as a string
+    :param list todos: List of :class:`todotxtio.Todo` objects
+    :rtype: str
     """
     return '\n'.join([str(todo) for todo in todos])
 
@@ -173,7 +199,10 @@ class Todo:
         self.tags = tags
 
     def to_dict(self):
-        """Return a dict representation of this Todo instance."""
+        """Return a dict representation of this Todo instance.
+
+        :rtype: dict
+        """
         return {
             'text': self.text,
             'completed': self.completed,
@@ -244,7 +273,24 @@ class Todo:
 
 
 def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
-    """Return a list of todos that matches the provided filters."""
+    """Return a list of todos that matches the provided filters.
+
+    It takes the exact same parameters as the :class:`todotxtio.Todo` object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
+    All criteria defaults to `None` which means that the criteria is ignored.
+
+    A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in the results list, it will
+    never be checked again.
+
+    :param str text: String to be found in the todo text
+    :param bool completed: Search for completed/uncompleted todos only
+    :param str completion_date: Match this completion date
+    :param list priority: List of priorities to match
+    :param str creation_date: Match this creation date
+    :param list projects: List of projects to match
+    :param list contexts: List of contexts to match
+    :param dict tags: Dict of tag to match
+    :rtype: list
+    """
     results = []
 
     for todo in todos:
