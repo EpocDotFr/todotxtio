@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Todo.txt I/O'
-copyright = '2016, Epoc'
-author = 'Epoc'
+copyright = '2016, <a href="https://epoc.fr/">Epoc</a>'
+author = '<a href="https://epoc.fr/">Epoc</a>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -131,7 +131,10 @@ html_theme = 'alabaster'
 #
 html_theme_options = {
     'show_powered_by': False,
-    'show_related': True
+    'show_related': True,
+    'github_banner': True,
+    'github_user': 'EpocDotFr',
+    'github_repo': 'todotxtio'
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -181,7 +184,7 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #
-html_sidebars = { '**': ['localtoc.html'] }
+html_sidebars = { '**': ['sidebarintro.html', 'localtoc.html'] }
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -210,7 +213,7 @@ html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #
-# html_show_copyright = True
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
@@ -347,3 +350,5 @@ texinfo_documents = [
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
 }
+
+suppress_warnings = ['image.nonlocal_uri']
