@@ -227,6 +227,8 @@ You can search in a given todo list using the handy :func:`todotxtio.search` wit
 
 .. code-block:: python
 
+    # list_of_todos is a list of Todo objects
+
     results = todotxtio.search(list_of_todos,
         priority=['A', 'C'],
         contexts=['home'],

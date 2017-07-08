@@ -35,7 +35,7 @@ def from_stream(stream, close=True):
     """Load a todo list from an already-opened stream.
 
     :param file stream: A file-like object
-    :param bool close: Whetever to close the stream or not
+    :param bool close: Whetever to close the stream or not after all operation are finised
     :rtype: list
     """
     string = stream.read()
@@ -71,7 +71,7 @@ def from_string(string):
 
     for line in string.strip().splitlines():
         line = line.strip()
-        
+
         todo_pre_data = todo_data_regex.match(line)
 
         todo = Todo()
@@ -134,7 +134,7 @@ def to_stream(stream, todos, close=True):
 
     :param file stream: A file-like object
     :param list todos: List of :class:`todotxtio.Todo` objects
-    :param bool close: Whetever to close the stream or not
+    :param bool close: Whetever to close the stream or not after all operation are finised
     :rtype: None
     """
     stream.write(to_string(todos))
@@ -168,12 +168,12 @@ class Todo:
     """Represent one todo.
 
     :param str text: The text of the todo
-    :param bool completed: Should this todo be marked as completed or not
-    :param str completion_date: A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True
-    :param str priority: The priority of the todo represented by a char between A-Z
-    :param str creation_date: A create date, in the YYYY-MM-DD format
-    :param list projects: A list of projects without +
-    :param list contexts: A list of projects without @
+    :param bool completed: Should this todo be marked as completed?
+    :param str completion_date: A date of completion, in the ``YYYY-MM-DD`` format. Setting this property will automatically set the ``completed`` attribute to ``True``.
+    :param str priority: The priority of the todo represented by a char between ``A-Z``
+    :param str creation_date: A date of creation, in the ``YYYY-MM-DD`` format
+    :param list projects: A list of projects without leading ``+``
+    :param list contexts: A list of projects without leading ``@``
     :param dict tags: A dict of tags
     """
     text = None
