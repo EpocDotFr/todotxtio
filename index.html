@@ -230,7 +230,9 @@ define and retrieve custom formatted data:</p>
 <div class="section" id="searching-a-todo-list">
 <h3>Searching a todo list<a class="headerlink" href="#searching-a-todo-list" title="Permalink to this headline">¶</a></h3>
 <p>You can search in a given todo list using the handy <a class="reference internal" href="#todotxtio.search" title="todotxtio.search"><code class="xref py py-func docutils literal"><span class="pre">todotxtio.search()</span></code></a> with its filter criteria.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">list_of_todos</span><span class="p">,</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># list_of_todos is a list of Todo objects</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">todotxtio</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">list_of_todos</span><span class="p">,</span>
     <span class="n">priority</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">],</span>
     <span class="n">contexts</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;home&#39;</span><span class="p">],</span>
     <span class="n">projects</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;todo&#39;</span><span class="p">],</span>
@@ -305,7 +307,7 @@ define and retrieve custom formatted data:</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>stream</strong> (<em>file</em>) &#8211; A file-like object</li>
-<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not</li>
+<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not after all operation are finised</li>
 </ul>
 </td>
 </tr>
@@ -380,7 +382,7 @@ define and retrieve custom formatted data:</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>stream</strong> (<em>file</em>) &#8211; A file-like object</li>
 <li><strong>todos</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; List of <a class="reference internal" href="#todotxtio.Todo" title="todotxtio.Todo"><code class="xref py py-class docutils literal"><span class="pre">todotxtio.Todo</span></code></a> objects</li>
-<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not</li>
+<li><strong>close</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Whetever to close the stream or not after all operation are finised</li>
 </ul>
 </td>
 </tr>
@@ -439,12 +441,12 @@ define and retrieve custom formatted data:</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The text of the todo</li>
-<li><strong>completed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Should this todo be marked as completed or not</li>
-<li><strong>completion_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A completion date, in the YYYY-MM-DD format. Setting this property will automatically set completed to True</li>
-<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The priority of the todo represented by a char between A-Z</li>
-<li><strong>creation_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A create date, in the YYYY-MM-DD format</li>
-<li><strong>projects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without +</li>
-<li><strong>contexts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without &#64;</li>
+<li><strong>completed</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.6)"><em>bool</em></a>) &#8211; Should this todo be marked as completed?</li>
+<li><strong>completion_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A date of completion, in the <code class="docutils literal"><span class="pre">YYYY-MM-DD</span></code> format. Setting this property will automatically set the <code class="docutils literal"><span class="pre">completed</span></code> attribute to <code class="docutils literal"><span class="pre">True</span></code>.</li>
+<li><strong>priority</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; The priority of the todo represented by a char between <code class="docutils literal"><span class="pre">A-Z</span></code></li>
+<li><strong>creation_date</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a>) &#8211; A date of creation, in the <code class="docutils literal"><span class="pre">YYYY-MM-DD</span></code> format</li>
+<li><strong>projects</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without leading <code class="docutils literal"><span class="pre">+</span></code></li>
+<li><strong>contexts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.6)"><em>list</em></a>) &#8211; A list of projects without leading <code class="docutils literal"><span class="pre">&#64;</span></code></li>
 <li><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.6)"><em>dict</em></a>) &#8211; A dict of tags</li>
 </ul>
 </td>
