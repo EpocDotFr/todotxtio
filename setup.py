@@ -1,5 +1,4 @@
 from setuptools import setup
-from os import path
 import todotxtio
 
 setup(
@@ -15,6 +14,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries',
+        'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent'
     ],
