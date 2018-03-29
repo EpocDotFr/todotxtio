@@ -114,7 +114,7 @@ def from_string(string):
                 if todo_pre_data.group(2):
                     todo.completion_date = todo_pre_data.group(2)
             else:
-                todo.creation_date = todo_pre_data.group(2)
+                todo.creation_date = todo_pre_data.group(4)
 
             todo.priority = todo_pre_data.group(3)
 
