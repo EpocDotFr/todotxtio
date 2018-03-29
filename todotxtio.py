@@ -1,5 +1,9 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import os
 import re
+import io
 
 __version__ = '0.2.2'
 
@@ -16,14 +20,20 @@ __all__ = [
     'search'
 ]
 
-todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
+todo_data_regex = re.compile( \
+                             '^(?:(x) )?' + \
+                             '(?:(\d{4}-\d{2}-\d{2}) )?' + \
+                             '(?:\(([A-Z])\) )?' + \
+                             '(?:(\d{4}-\d{2}-\d{2}) )?' \
+                             )
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')
 todo_tag_regex = re.compile(' (\S*):(\S*)')
 
 
 def from_dicts(todos):
-    """Convert a list of todo dicts to a list of :class:`todotxtio.Todo` objects.
+    """
+    Convert a list of todo dicts to a list of :class:`todotxtio.Todo` objects.
 
     :param list todos: A list of todo dicts
     :rtype: list
@@ -32,7 +42,8 @@ def from_dicts(todos):
 
 
 def from_stream(stream, close=True):
-    """Load a todo list from an already-opened stream.
+    """
+    Load a todo list from an already-opened stream.
 
     :param file stream: A file-like object
     :param bool close: Whetever to close the stream or not after all operation are finised
@@ -47,7 +58,8 @@ def from_stream(stream, close=True):
 
 
 def from_file(file_path, encoding='utf-8'):
-    """Load a todo list from a file.
+    """
+    Load a todo list from a file.
 
     :param str file_path: Path to the file
     :param str encoding: The encoding of the file to open
@@ -56,25 +68,42 @@ def from_file(file_path, encoding='utf-8'):
     if not os.path.isfile(file_path):
         raise FileNotFoundError('File doesn\'t exists: ' + file_path)
 
-    stream = open(file_path, 'r', encoding=encoding)
+    stream = io.open(file_path, 'r', encoding=encoding)
 
     return from_stream(stream)
 
 
 def from_string(string):
-    """Load a todo list from a string.
+    """
+    Load a todo list from a string.
 
     :param str string: The string to parse
     :rtype: list
     """
+
+    # init
     todos = []
 
+
+
+    #
+    # evaluate each line
+    #
+
     for line in string.strip().splitlines():
+
         line = line.strip()
 
         todo_pre_data = todo_data_regex.match(line)
 
         todo = Todo()
+
+
+
+
+        #
+        # evaluate prefix data
+        #
 
         if todo_pre_data:
             todo.completed = todo_pre_data.group(1) == 'x'
@@ -93,27 +122,40 @@ def from_string(string):
         else:
             text = line
 
-        todo_projects = todo_project_regex.findall(text)
 
+
+        #
+        # evaluate remaining data
+        #
+
+        # projects
+        todo_projects = todo_project_regex.findall(text)
         if len(todo_projects) > 0:
             todo.projects = todo_projects
             text = todo_project_regex.sub('', text).strip()
 
+        # contexts
         todo_contexts = todo_context_regex.findall(text)
-
         if len(todo_contexts) > 0:
             todo.contexts = todo_contexts
             text = todo_context_regex.sub('', text).strip()
 
+        # tags
         todo_tags = todo_tag_regex.findall(text)
-
         if len(todo_tags) > 0:
             for todo_tag in todo_tags:
                 todo.tags[todo_tag[0]] = todo_tag[1]
 
             text = todo_tag_regex.sub('', text).strip()
 
+        # text
         todo.text = text
+
+
+
+        #
+        # add this TODO to list of todos
+        #
 
         todos.append(todo)
 
@@ -121,7 +163,8 @@ def from_string(string):
 
 
 def to_dicts(todos):
-    """Convert a list of :class:`todotxtio.Todo` objects to a list of todo dict.
+    """
+    Convert a list of :class:`todotxtio.Todo` objects to a list of todo dict.
 
     :param list todos: List of :class:`todotxtio.Todo` objects
     :rtype: list
@@ -130,7 +173,8 @@ def to_dicts(todos):
 
 
 def to_stream(stream, todos, close=True):
-    """Write a list of todos to an already-opened stream.
+    """
+    Write a list of todos to an already-opened stream.
 
     :param file stream: A file-like object
     :param list todos: List of :class:`todotxtio.Todo` objects
@@ -144,19 +188,21 @@ def to_stream(stream, todos, close=True):
 
 
 def to_file(file_path, todos, encoding='utf-8'):
-    """Write a list of todos to a file.
+    """
+    Write a list of todos to a file.
 
     :param str file_path: Path to the file
     :param list todos: List of :class:`todotxtio.Todo` objects
     :param str encoding: The encoding of the file to open
     :rtype: None
     """
-    stream = open(file_path, 'w', encoding=encoding)
+    stream = io.open(file_path, 'w', encoding=encoding)
     to_stream(stream, todos)
 
 
 def to_string(todos):
-    """Convert a list of todos to a string.
+    """
+    Convert a list of todos to a string.
 
     :param list todos: List of :class:`todotxtio.Todo` objects
     :rtype: str
@@ -164,8 +210,9 @@ def to_string(todos):
     return '\n'.join([str(todo) for todo in todos])
 
 
-class Todo:
-    """Represent one todo.
+class Todo(object):
+    """
+    Represent one todo.
 
     :param str text: The text of the todo
     :param bool completed: Should this todo be marked as completed?
@@ -199,7 +246,8 @@ class Todo:
         self.tags = tags
 
     def to_dict(self):
-        """Return a dict representation of this Todo instance.
+        """
+        Return a dict representation of this Todo instance.
 
         :rtype: dict
         """
@@ -217,29 +265,31 @@ class Todo:
     def __setattr__(self, name, value):
         if name == 'completed':
             if not value:
-                super().__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
+                super(Todo, self).__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
         elif name == 'completion_date':
             if value:
-                super().__setattr__('completed', True) # Setting the completion date must set this todo as completed...
+                super(Todo, self).__setattr__('completed', True) # Setting the completion date must set this todo as completed...
             else:
-                super().__setattr__('completed', False) # ...and vice-versa
+                super(Todo, self).__setattr__('completed', False) # ...and vice-versa
         elif name in ['projects', 'contexts']:
             if not value:
-                super().__setattr__(name, []) # Force contexts, projects to be lists when setting them to a falsely value
+                super(Todo, self).__setattr__(name, []) # Force contexts, projects to be lists when setting them to a falsely value
                 return
             elif type(value) is not list: # Make sure, otherwise, that the provided value is a list
                 raise ValueError(name + ' should be a list')
         elif name == 'tags':
             if not value:
-                super().__setattr__(name, {}) # Force tags to be a dict when setting them to a falsely value
+                super(Todo, self).__setattr__(name, {}) # Force tags to be a dict when setting them to a falsely value
                 return
             elif type(value) is not dict: # Make sure, otherwise, that the provided value is a dict
                 raise ValueError(name + ' should be a dict')
 
-        super().__setattr__(name, value)
+        super(Todo, self).__setattr__(name, value)
 
     def __str__(self):
-        """Convert this Todo object in a valid Todo.txt line."""
+        """
+        Convert this Todo object in a valid Todo.txt line.
+        """
         ret = []
 
         if self.completed:
@@ -268,12 +318,15 @@ class Todo:
         return ' '.join(ret)
 
     def __repr__(self):
-        """Call the __str__ method to return a textual representation of this Todo object."""
+        """
+        Call the __str__ method to return a textual representation of this Todo object.
+        """
         return self.__str__()
 
 
 def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
-    """Return a list of todos that matches the provided filters.
+    """
+    Return a list of todos that matches the provided filters.
 
     It takes the exact same parameters as the :class:`todotxtio.Todo` object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
     All criteria defaults to ``None`` which means that the criteria is ignored.
