@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -80,9 +79,8 @@ def from_string(string):
     :param str string: The string to parse
     :rtype: list
     """
-
-    # init
     todos = []
+
 
 
 
@@ -97,7 +95,6 @@ def from_string(string):
         todo_pre_data = todo_data_regex.match(line)
 
         todo = Todo()
-
 
 
 
