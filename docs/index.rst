@@ -10,7 +10,7 @@ This module tries to comply to the `Todo.txt specifications <https://github.com/
 Prerequisites
 -------------
 
-Should work on any Python 3.x version. Feel free to test with another Python version and give me feedback.
+Should work on any Python 2.x and 3.x version. Feel free to test with another Python version and give me feedback.
 
 Installation
 ------------
