@@ -28,6 +28,10 @@ todo_data_regex = re.compile( \
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')
 todo_tag_regex = re.compile(' (\S*):(\S*)')
+todo_author_regex = re.compile(' \[\*(\S*)\]')
+todo_responsible_regex = re.compile(' \[([^\+\*\s]*)\]')
+todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
+todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
 
 
 def from_dicts(todos):
@@ -83,7 +87,6 @@ def from_string(string):
 
 
 
-
     #
     # evaluate each line
     #
@@ -122,7 +125,7 @@ def from_string(string):
 
 
         #
-        # evaluate remaining data
+        # evaluate contexts and projects
         #
 
         # projects
@@ -137,7 +140,47 @@ def from_string(string):
             todo.contexts = todo_contexts
             text = todo_context_regex.sub('', text).strip()
 
-        # tags
+
+
+        #
+        # evaluate persons
+        #
+
+        # responsible
+        todo_responsible = todo_responsible_regex.findall(text)
+        if len(todo_responsible) > 0:
+            todo.responsible = todo_responsible
+            text = todo_responsible_regex.sub('', text).strip()
+
+        # tobeinformed
+        todo_tobeinformed = todo_tobeinformed_regex.findall(text)
+        if len(todo_tobeinformed) > 0:
+            todo.tobeinformed = todo_tobeinformed
+            text = todo_tobeinformed_regex.sub('', text).strip()
+
+        # author
+        todo_author = todo_author_regex.findall(text)
+        if len(todo_author) > 0:
+            todo.author = todo_author
+            text = todo_author_regex.sub('', text).strip()
+
+
+
+        #
+        # evaluate remarks
+        #
+
+        todo_remarks = todo_remarks_regex.findall(text)
+        if len(todo_remarks) > 0:
+            todo.remarks = todo_remarks
+            text = todo_remarks_regex.sub('', text).strip()
+
+
+
+        #
+        # evaluate further tags
+        #
+
         todo_tags = todo_tag_regex.findall(text)
         if len(todo_tags) > 0:
             for todo_tag in todo_tags:
@@ -228,8 +271,25 @@ class Todo(object):
     projects = []
     contexts = []
     tags = {}
+    remarks = None
+    author = None
+    responsible = None
+    tobeinformed = []
 
-    def __init__(self, text=None, completed=False, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
+    def __init__(self,
+                 text=None,
+                 completed=False,
+                 completion_date=None,
+                 priority=None,
+                 creation_date=None,
+                 projects=None,
+                 contexts=None,
+                 tags=None,
+                 remarks=None,
+                 author=None,
+                 responsible=None,
+                 tobeinformed=[],
+                 ):
         self.text = text
         self.completed = completed
 
@@ -241,6 +301,10 @@ class Todo(object):
         self.projects = projects
         self.contexts = contexts
         self.tags = tags
+        self.remarks = remarks
+        self.author = author
+        self.responsible = responsible
+        self.tobeinformed = tobeinformed
 
     def to_dict(self):
         """
@@ -257,6 +321,10 @@ class Todo(object):
             'projects': self.projects,
             'contexts': self.contexts,
             'tags': self.tags,
+            'remarks': self.remarks,
+            'author': self.author,
+            'responsible': self.responsible,
+            'tobeinformed': self.tobeinformed,
         }
 
     def __setattr__(self, name, value):
@@ -321,7 +389,20 @@ class Todo(object):
         return self.__str__()
 
 
-def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
+def search(todos,
+        text=None,
+        completed=None,
+        completion_date=None,
+        priority=None,
+        creation_date=None,
+        projects=None,
+        contexts=None,
+        tags=None,
+        remarks=None,
+        author=None,
+        responsible=None,
+        tobeinformed=[],
+        ):
     """
     Return a list of todos that matches the provided filters.
 
