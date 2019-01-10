@@ -78,14 +78,10 @@ def from_string(string):
 
         if todo_pre_data:
             todo.completed = todo_pre_data.group(1) == 'x'
+            todo.creation_date = todo_pre_data.group(4)
 
-            if todo.completed:
-                todo.creation_date = todo_pre_data.group(4)
-
-                if todo_pre_data.group(2):
-                    todo.completion_date = todo_pre_data.group(2)
-            else:
-                todo.creation_date = todo_pre_data.group(2)
+            if todo.completed and todo_pre_data.group(2):
+                todo.completion_date = todo_pre_data.group(2)
 
             todo.priority = todo_pre_data.group(3)
 
