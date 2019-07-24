@@ -27,7 +27,7 @@ todo_data_regex = re.compile( \
                              )
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')
-todo_tag_regex = re.compile(' (\S*):(\S*)')
+todo_tag_regex = re.compile(' ([A-z]\S*):(\S*)')
 todo_authors_regex = re.compile(' \[\*(\S*)\]')
 todo_responsibles_regex = re.compile(' \[([^\+\*\s]*)\]')
 todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
