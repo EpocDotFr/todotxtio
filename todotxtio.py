@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -32,7 +33,6 @@ todo_author_regex = re.compile(' \[\*(\S*)\]')
 todo_responsible_regex = re.compile(' \[([^\+\*\s]*)\]')
 todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
 todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
-
 
 def from_dicts(todos):
     """
@@ -275,6 +275,7 @@ class Todo(object):
     author = None
     responsible = None
     tobeinformed = []
+    remarks = None
 
     def __init__(self,
                  text=None,
