@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import os
@@ -29,10 +28,11 @@ todo_data_regex = re.compile( \
 todo_project_regex = re.compile(' \+(\S*)')
 todo_context_regex = re.compile(' @(\S*)')
 todo_tag_regex = re.compile(' (\S*):(\S*)')
-todo_author_regex = re.compile(' \[\*(\S*)\]')
-todo_responsible_regex = re.compile(' \[([^\+\*\s]*)\]')
+todo_authors_regex = re.compile(' \[\*(\S*)\]')
+todo_responsibles_regex = re.compile(' \[([^\+\*\s]*)\]')
 todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
 todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
+
 
 def from_dicts(todos):
     """
@@ -146,11 +146,11 @@ def from_string(string):
         # evaluate persons
         #
 
-        # responsible
-        todo_responsible = todo_responsible_regex.findall(text)
-        if len(todo_responsible) > 0:
-            todo.responsible = todo_responsible
-            text = todo_responsible_regex.sub('', text).strip()
+        # responsibles
+        todo_responsibles = todo_responsibles_regex.findall(text)
+        if len(todo_responsibles) > 0:
+            todo.responsibles = todo_responsibles
+            text = todo_responsibles_regex.sub('', text).strip()
 
         # tobeinformed
         todo_tobeinformed = todo_tobeinformed_regex.findall(text)
@@ -158,11 +158,11 @@ def from_string(string):
             todo.tobeinformed = todo_tobeinformed
             text = todo_tobeinformed_regex.sub('', text).strip()
 
-        # author
-        todo_author = todo_author_regex.findall(text)
-        if len(todo_author) > 0:
-            todo.author = todo_author
-            text = todo_author_regex.sub('', text).strip()
+        # authors
+        todo_authors = todo_authors_regex.findall(text)
+        if len(todo_authors) > 0:
+            todo.authors = todo_authors
+            text = todo_authors_regex.sub('', text).strip()
 
 
 
@@ -247,7 +247,7 @@ def to_string(todos):
     :param list todos: List of :class:`todotxtio.Todo` objects
     :rtype: str
     """
-    return '\n'.join([str(todo) for todo in todos])
+    return '\n'.join([serialize(todo) for todo in todos])
 
 
 class Todo(object):
@@ -271,11 +271,10 @@ class Todo(object):
     projects = []
     contexts = []
     tags = {}
-    remarks = None
-    author = None
-    responsible = None
+    remarks = []
+    authors = []
+    responsibles = []
     tobeinformed = []
-    remarks = None
 
     def __init__(self,
                  text=None,
@@ -287,9 +286,9 @@ class Todo(object):
                  contexts=None,
                  tags=None,
                  remarks=None,
-                 author=None,
-                 responsible=None,
-                 tobeinformed=[],
+                 authors=None,
+                 responsibles=None,
+                 tobeinformed=None,
                  ):
         self.text = text
         self.completed = completed
@@ -303,8 +302,8 @@ class Todo(object):
         self.contexts = contexts
         self.tags = tags
         self.remarks = remarks
-        self.author = author
-        self.responsible = responsible
+        self.authors = authors
+        self.responsibles = responsibles
         self.tobeinformed = tobeinformed
 
     def to_dict(self):
@@ -323,26 +322,34 @@ class Todo(object):
             'contexts': self.contexts,
             'tags': self.tags,
             'remarks': self.remarks,
-            'author': self.author,
-            'responsible': self.responsible,
+            'authors': self.authors,
+            'responsibles': self.responsibles,
             'tobeinformed': self.tobeinformed,
         }
 
     def __setattr__(self, name, value):
+
+        # BOOL TYPE
         if name == 'completed':
             if not value:
                 super(Todo, self).__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
+
+        #DATE TYPE
         elif name == 'completion_date':
             if value:
                 super(Todo, self).__setattr__('completed', True) # Setting the completion date must set this todo as completed...
             else:
                 super(Todo, self).__setattr__('completed', False) # ...and vice-versa
-        elif name in ['projects', 'contexts']:
+
+        # LIST TYPE
+        elif name in ['projects', 'contexts', 'authors', 'responsibles', 'tobeinformed', 'remarks']:
             if not value:
                 super(Todo, self).__setattr__(name, []) # Force contexts, projects to be lists when setting them to a falsely value
                 return
             elif type(value) is not list: # Make sure, otherwise, that the provided value is a list
                 raise ValueError(name + ' should be a list')
+
+        # TAG TYPE
         elif name == 'tags':
             if not value:
                 super(Todo, self).__setattr__(name, {}) # Force tags to be a dict when setting them to a falsely value
@@ -400,9 +407,9 @@ def search(todos,
         contexts=None,
         tags=None,
         remarks=None,
-        author=None,
+        authors=None,
         responsible=None,
-        tobeinformed=[],
+        tobeinformed=None,
         ):
     """
     Return a list of todos that matches the provided filters.
@@ -456,3 +463,83 @@ def search(todos,
             results.append(todo)
 
     return results
+
+def serialize(todo):
+    """
+    Convert a Todo object in a serial Todo.txt line.
+    """
+
+    # in Python v2 there seems to be a problem with __str__ and non-standard
+    # string characters (as they are encountered e.g. in German languages).
+    # __str__ seems to return only regular string characters.
+
+    ret = []
+
+
+
+    #
+    # create prefix
+    #
+
+    if todo.completed:
+        ret.append('x')
+
+    if todo.completion_date:
+        ret.append(todo.completion_date)
+
+    if todo.priority:
+        ret.append('(' + todo.priority + ')')
+
+    if todo.creation_date:
+        ret.append(todo.creation_date)
+
+
+
+    #
+    # append text
+    #
+
+    ret.append(todo.text)
+
+
+
+    #
+    # append remarks
+    #
+
+    if todo.remarks:
+        ret.append(''.join([' {' + remarks + '}' for remarks in todo.remarks]).strip())
+
+
+
+    #
+    # append projects, contexts and tags
+    #
+
+    if todo.projects:
+        ret.append(''.join([' +' + project for project in todo.projects]).strip())
+
+    if todo.contexts:
+        ret.append(''.join([' @' + context for context in todo.contexts]).strip())
+
+    if todo.tags:
+        ret.append(''.join([' ' + tag_name + ':' + tag_value for tag_name, tag_value in todo.tags.items()]).strip())
+
+
+
+    #
+    # append persons
+    #
+
+    if todo.authors:
+        ret.append(''.join([' [*' + auth + ']' for auth in todo.authors]).strip())
+
+    if todo.responsibles:
+        ret.append(''.join([' [' + resp + ']' for resp in todo.responsibles]).strip())
+
+    if todo.tobeinformed:
+        ret.append(''.join([' [+' + info + ']' for info in todo.tobeinformed]).strip())
+
+
+
+    return ' '.join(ret)
