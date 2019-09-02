@@ -87,6 +87,7 @@ def from_string(string):
 
 
 
+
     #
     # evaluate each line
     #
@@ -98,6 +99,7 @@ def from_string(string):
         todo_pre_data = todo_data_regex.match(line)
 
         todo = Todo()
+
 
 
 
@@ -114,13 +116,17 @@ def from_string(string):
                 if todo_pre_data.group(2):
                     todo.completion_date = todo_pre_data.group(2)
             else:
-                todo.creation_date = todo_pre_data.group(4)
+                if todo_pre_data.group(4):
+                    todo.creation_date = todo_pre_data.group(4)
+                else:
+                    todo.creation_date = todo_pre_data.group(2)
 
             todo.priority = todo_pre_data.group(3)
 
             text = todo_data_regex.sub('', line).strip()
         else:
             text = line
+
 
 
 
@@ -139,6 +145,7 @@ def from_string(string):
         if len(todo_contexts) > 0:
             todo.contexts = todo_contexts
             text = todo_context_regex.sub('', text).strip()
+
 
 
 
@@ -166,6 +173,7 @@ def from_string(string):
 
 
 
+
         #
         # evaluate remarks
         #
@@ -177,8 +185,9 @@ def from_string(string):
 
 
 
+
         #
-        # evaluate further tags
+        # evaluate further tags and text
         #
 
         todo_tags = todo_tag_regex.findall(text)
@@ -188,8 +197,14 @@ def from_string(string):
 
             text = todo_tag_regex.sub('', text).strip()
 
+        # evaluate address
+        #if 'loc' in [_key.lower() for _key in todo.tags.keys()]:
+            #todo.tags['loc'] = todo.tags['loc'].replace('\\', '\n')
+            #todo.tags['loc'] = todo.tags['loc'].replace('_', ' ')
+
         # text
         todo.text = text
+
 
 
 
@@ -334,7 +349,7 @@ class Todo(object):
             if not value:
                 super(Todo, self).__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
 
-        #DATE TYPE
+        # DATE TYPE
         elif name == 'completion_date':
             if value:
                 super(Todo, self).__setattr__('completed', True) # Setting the completion date must set this todo as completed...
@@ -464,6 +479,7 @@ def search(todos,
 
     return results
 
+
 def serialize(todo):
     """
     Convert a Todo object in a serial Todo.txt line.
@@ -474,6 +490,7 @@ def serialize(todo):
     # __str__ seems to return only regular string characters.
 
     ret = []
+
 
 
 
@@ -495,11 +512,13 @@ def serialize(todo):
 
 
 
+
     #
     # append text
     #
 
     ret.append(todo.text)
+
 
 
 
@@ -509,6 +528,7 @@ def serialize(todo):
 
     if todo.remarks:
         ret.append(''.join([' {' + remarks + '}' for remarks in todo.remarks]).strip())
+
 
 
 
@@ -539,6 +559,7 @@ def serialize(todo):
 
     if todo.tobeinformed:
         ret.append(''.join([' [+' + info + ']' for info in todo.tobeinformed]).strip())
+
 
 
 
