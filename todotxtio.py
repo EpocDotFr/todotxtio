@@ -178,9 +178,14 @@ def from_string(string):
         # evaluate remarks
         #
 
+        # get all remark portions as a list of strings
         todo_remarks = todo_remarks_regex.findall(text)
-        if len(todo_remarks) > 0:
-            todo.remarks = todo_remarks
+        if todo_remarks:
+            # concatenate portions
+            todo_remarks = '\\'.join(todo_remarks)
+            # translate LINE BREAKS
+            todo.remarks = todo_remarks.replace('\\','\n')
+            # remove all remark portions from text
             text = todo_remarks_regex.sub('', text).strip()
 
 
@@ -356,8 +361,16 @@ class Todo(object):
             else:
                 super(Todo, self).__setattr__('completed', False) # ...and vice-versa
 
+        # STRING TYPE
+        elif name in ['remarks']:
+            if not value:
+                super(Todo, self).__setattr__(name, '') # Force contexts, projects to be lists when setting them to a falsely value
+                return
+            elif type(value) is not str:
+                raise ValueError(name + ' should be a string')
+
         # LIST TYPE
-        elif name in ['projects', 'contexts', 'authors', 'responsibles', 'tobeinformed', 'remarks']:
+        elif name in ['projects', 'contexts', 'authors', 'responsibles', 'tobeinformed']:
             if not value:
                 super(Todo, self).__setattr__(name, []) # Force contexts, projects to be lists when setting them to a falsely value
                 return
@@ -527,7 +540,8 @@ def serialize(todo):
     #
 
     if todo.remarks:
-        ret.append(''.join([' {' + remarks + '}' for remarks in todo.remarks]).strip())
+        #ret.append(''.join([' {' + remarks + '}' for remarks in todo.remarks]).strip())
+        ret.append(' {' + todo.remarks.replace('\n', '\\').strip() + '}')
 
 
 
