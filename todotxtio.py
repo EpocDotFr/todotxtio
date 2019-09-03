@@ -366,8 +366,8 @@ class Todo(object):
             if not value:
                 super(Todo, self).__setattr__(name, '') # Force contexts, projects to be lists when setting them to a falsely value
                 return
-            elif type(value) is not str:
-                raise ValueError(name + ' should be a string')
+            #elif type(value) is not str:
+                #raise ValueError(name + ' should be a string')
 
         # LIST TYPE
         elif name in ['projects', 'contexts', 'authors', 'responsibles', 'tobeinformed']:
