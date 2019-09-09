@@ -150,6 +150,23 @@ def from_string(string):
 
 
         #
+        # evaluate remarks
+        #
+
+        # get all remark portions as a list of strings
+        todo_remarks = todo_remarks_regex.findall(text)
+        if todo_remarks:
+            # concatenate portions
+            todo_remarks = '\\'.join(todo_remarks)
+            # translate LINE BREAKS
+            todo.remarks = todo_remarks.replace('\\','\n')
+            # remove all remark portions from text
+            text = todo_remarks_regex.sub('', text).strip()
+
+
+
+
+        #
         # evaluate persons
         #
 
@@ -170,23 +187,6 @@ def from_string(string):
         if len(todo_authors) > 0:
             todo.authors = todo_authors
             text = todo_authors_regex.sub('', text).strip()
-
-
-
-
-        #
-        # evaluate remarks
-        #
-
-        # get all remark portions as a list of strings
-        todo_remarks = todo_remarks_regex.findall(text)
-        if todo_remarks:
-            # concatenate portions
-            todo_remarks = '\\'.join(todo_remarks)
-            # translate LINE BREAKS
-            todo.remarks = todo_remarks.replace('\\','\n')
-            # remove all remark portions from text
-            text = todo_remarks_regex.sub('', text).strip()
 
 
 
