@@ -31,6 +31,7 @@ todo_tag_regex = re.compile(' ([A-z]\S*):(\S*)')
 todo_authors_regex = re.compile(' \[\*(\S*)\]')
 todo_responsibles_regex = re.compile(' \[([^\+\*\s]*)\]')
 todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
+todo_filelink_regex = re.compile(' (http://|https://|link:)(\S*)')
 todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
 
 
@@ -167,6 +168,30 @@ def from_string(string):
 
 
         #
+        # evaluate links
+        #
+
+        # http, https, link
+        todo_links = todo_filelink_regex.findall(text)
+        if todo_links:
+            todo.links = []
+            for _prot, _path in todo_links:
+
+                # check for colon
+                _idx = _prot.find(':')
+
+                # build link entry
+                todo.links.append(
+                    [ _prot[:_idx], _path ]
+                )
+
+            # remove identified content from text
+            text = todo_filelink_regex.sub('', text).strip()
+
+
+
+
+        #
         # evaluate persons
         #
 
@@ -295,6 +320,7 @@ class Todo(object):
     authors = []
     responsibles = []
     tobeinformed = []
+    links = []
 
     def __init__(self,
                  text=None,
@@ -345,6 +371,7 @@ class Todo(object):
             'authors': self.authors,
             'responsibles': self.responsibles,
             'tobeinformed': self.tobeinformed,
+            'links': self.links,
         }
 
     def __setattr__(self, name, value):
@@ -438,6 +465,7 @@ def search(todos,
         authors=None,
         responsible=None,
         tobeinformed=None,
+        links=None,
         ):
     """
     Return a list of todos that matches the provided filters.
@@ -542,6 +570,20 @@ def serialize(todo):
     if todo.remarks:
         #ret.append(''.join([' {' + remarks + '}' for remarks in todo.remarks]).strip())
         ret.append(' {' + todo.remarks.replace('\n', '\\').strip() + '}')
+
+
+
+
+    #
+    # append links
+    #
+
+    if todo.links:
+        for _prot, _path in todo.links:
+            if _prot in [ 'link' ]:
+                ret.append((' ' + _prot + ':' + _path).strip())
+            else:
+                ret.append((' ' + _prot + '://' + _path).strip())
 
 
 
