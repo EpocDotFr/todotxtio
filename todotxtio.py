@@ -16,10 +16,10 @@ __all__ = [
     'search'
 ]
 
-todo_data_regex = re.compile('^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
-todo_project_regex = re.compile(' \+(\S+)')
-todo_context_regex = re.compile(' @(\S+)')
-todo_tag_regex = re.compile(' (\S+):([^\s\/]+)')
+todo_data_regex = re.compile(r'^(?:(x) )?(?:(\d{4}-\d{2}-\d{2}) )?(?:\(([A-Z])\) )?(?:(\d{4}-\d{2}-\d{2}) )?')
+todo_project_regex = re.compile(r' \+(\S+)')
+todo_context_regex = re.compile(r' @(\S+)')
+todo_tag_regex = re.compile(r' ([^\s:]+):(\S+)')
 
 
 def from_dicts(todos):
@@ -294,7 +294,7 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
     results = []
 
     for todo in todos:
-        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match =True
+        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match = True
 
         if text is not None:
             text_match = text in todo.text
