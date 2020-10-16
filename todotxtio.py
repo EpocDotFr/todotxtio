@@ -294,7 +294,7 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
     results = []
 
     for todo in todos:
-        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match =True
+        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match = True
 
         if text is not None:
             text_match = text in todo.text
