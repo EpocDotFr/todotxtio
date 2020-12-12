@@ -4,7 +4,7 @@ import os
 import re
 import io
 
-__version__ = '0.2.2'
+__version__ = '1.1.1'
 
 __all__ = [
     'from_dicts',
@@ -19,22 +19,52 @@ __all__ = [
     'search'
 ]
 
+
+#
+# regular expressions
+#
+
+# all of a text line's elements are identified using regular expressions. these
+# regular expressions definitions will be found below. please note that not
+# every specific term has to be defined, as "tag" attributes hold every
+# non-list elements defined by the general "colon" syntax.
+
+# line prefix data
 todo_data_regex = re.compile( \
                              '^(?:(x) )?' + \
                              '(?:(\d{4}-\d{2}-\d{2}) )?' + \
                              '(?:\(([A-Z])\) )?' + \
                              '(?:(\d{4}-\d{2}-\d{2}) )?' \
                              )
+
+# project and subproject names
 todo_project_regex = re.compile(' \+(\S*)')
+
+# context and subcontext names
 todo_context_regex = re.compile(' @(\S*)')
-# todo_tag_regex = re.compile(' ([A-z]\S*):(\S*)')
-todo_tag_regex = re.compile(' ([A-z]\S*?):(\S*)')
+
+# author names
 todo_authors_regex = re.compile(' \[\*(\S*)\]')
+
+# responsible person names
 todo_responsibles_regex = re.compile(' \[([^\+\*\s]*)\]')
+
+# names of regarded persons
 todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
+
+# file and hyperlinks
 todo_filelink_regex = re.compile(' (http://|https://|link:)(\S*)')
+
+# text block of remarks
 todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
 
+# all other information as tags
+todo_tag_regex = re.compile(' ([A-z]\S*?):(\S*)')
+
+
+#
+# input functions
+#
 
 def from_dicts(todos):
     """
@@ -248,6 +278,10 @@ def from_string(string):
     return todos
 
 
+#
+# output functions
+#
+
 def to_dicts(todos):
     """
     Convert a list of :class:`todotxtio.Todo` objects to a list of todo dict.
@@ -296,18 +330,24 @@ def to_string(todos):
     return '\n'.join([serialize(todo) for todo in todos])
 
 
+#
+# main class definition
+#
+
 class Todo(object):
     """
     Represent one todo.
 
-    :param str text: The text of the todo
-    :param bool completed: Should this todo be marked as completed?
-    :param str completion_date: A date of completion, in the ``YYYY-MM-DD`` format. Setting this property will automatically set the ``completed`` attribute to ``True``.
-    :param str priority: The priority of the todo represented by a char between ``A-Z``
-    :param str creation_date: A date of creation, in the ``YYYY-MM-DD`` format
-    :param list projects: A list of projects without leading ``+``
-    :param list contexts: A list of projects without leading ``@``
-    :param dict tags: A dict of tags
+    :param str text:            The text of the todo
+    :param bool completed:      Should this todo be marked as completed?
+    :param str completion_date: A date of completion, in the ``YYYY-MM-DD`` format.
+                                Setting this property will automatically set the
+                                ``completed`` attribute to ``True``.
+    :param str priority:        The priority of the todo represented by a char between ``A-Z``
+    :param str creation_date:   A date of creation, in the ``YYYY-MM-DD`` format
+    :param list projects:       A list of projects without leading ``+``
+    :param list contexts:       A list of projects without leading ``@``
+    :param dict tags:           A dict of tags
     """
     text = None
     completed = False
@@ -453,6 +493,10 @@ class Todo(object):
         return self.__str__()
 
 
+#
+# search and format functions
+#
+
 def search(todos,
         text=None,
         completed=None,
@@ -471,26 +515,35 @@ def search(todos,
     """
     Return a list of todos that matches the provided filters.
 
-    It takes the exact same parameters as the :class:`todotxtio.Todo` object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
+    It takes the exact same parameters as the :class:`todotxtio.Todo`
+    object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
     All criteria defaults to ``None`` which means that the criteria is ignored.
 
-    A todo will be returned in the results list if all of the criteria matches. From the moment when a todo is sent in the results list, it will
-    never be checked again.
+    A todo will be returned in the results list if all of the criteria matches. From
+    the moment when a todo is sent in the results list, it will never be checked again.
 
-    :param str text: String to be found in the todo text
-    :param bool completed: Search for completed/uncompleted todos only
+    :param str text:            String to be found in the todo text
+    :param bool completed:      Search for completed/uncompleted todos only
     :param str completion_date: Match this completion date
-    :param list priority: List of priorities to match
-    :param str creation_date: Match this creation date
-    :param list projects: List of projects to match
-    :param list contexts: List of contexts to match
-    :param dict tags: Dict of tag to match
+    :param list priority:       List of priorities to match
+    :param str creation_date:   Match this creation date
+    :param list projects:       List of projects to match
+    :param list contexts:       List of contexts to match
+    :param dict tags:           Dict of tag to match
     :rtype: list
     """
     results = []
 
     for todo in todos:
-        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match =True
+        text_match \
+                = completed_match \
+                = completion_date_match \
+                = priority_match \
+                = creation_date_match \
+                = projects_match \
+                = contexts_match \
+                = tags_match \
+                = True
 
         if text is not None:
             text_match = text in todo.text
@@ -516,7 +569,14 @@ def search(todos,
         if tags is not None:
             tags_match = any(todo.tags[k] == v for k, v in tags.items() if k in todo.tags)
 
-        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match and tags_match:
+        if text_match \
+                and completed_match \
+                and completion_date_match \
+                and priority_match \
+                and creation_date_match \
+                and projects_match \
+                and contexts_match \
+                and tags_match:
             results.append(todo)
 
     return results
