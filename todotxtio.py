@@ -321,7 +321,7 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
             tags_match = any(todo.tags[k] == v for k, v in tags.items() if k in todo.tags)
 
         if exact is not None:
-            exact_match = exact == todo.text
+            exact_match = todo.text == exact
 
         if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match and tags_match and exact_match:
             results.append(todo)
