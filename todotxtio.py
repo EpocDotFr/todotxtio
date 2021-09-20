@@ -272,7 +272,7 @@ class Todo:
         return self.__str__()
 
 
-def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None):
+def search(todos, text=None, completed=None, completion_date=None, priority=None, creation_date=None, projects=None, contexts=None, tags=None, exact=None):
     """Return a list of todos that matches the provided filters.
 
     It takes the exact same parameters as the :class:`todotxtio.Todo` object constructor, and return a list of :class:`todotxtio.Todo` objects as well.
@@ -294,7 +294,7 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
     results = []
 
     for todo in todos:
-        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match =True
+        text_match = completed_match = completion_date_match = priority_match = creation_date_match = projects_match = contexts_match = tags_match = exact_match = True
 
         if text is not None:
             text_match = text in todo.text
@@ -320,7 +320,10 @@ def search(todos, text=None, completed=None, completion_date=None, priority=None
         if tags is not None:
             tags_match = any(todo.tags[k] == v for k, v in tags.items() if k in todo.tags)
 
-        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match and tags_match:
+        if exact is not None:
+            exact_match = todo.text == exact
+
+        if text_match and completed_match and completion_date_match and priority_match and creation_date_match and projects_match and contexts_match and tags_match and exact_match:
             results.append(todo)
 
     return results
