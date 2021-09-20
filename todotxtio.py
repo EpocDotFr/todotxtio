@@ -1,5 +1,6 @@
 import os
 import re
+from datetime import datetime, date
 
 __version__ = '0.2.3'
 
@@ -218,8 +219,14 @@ class Todo:
         if name == 'completed':
             if not value:
                 super().__setattr__('completion_date', None) # Uncompleted todo must not have any completion date
+        elif name == 'creation_date':
+            if value:
+                if isinstance(value, date) or isinstance(value, datetime):
+                    value = value.strftime("%Y-%m-%d")
         elif name == 'completion_date':
             if value:
+                if isinstance(value, date) or isinstance(value, datetime):
+                    value = value.strftime("%Y-%m-%d")
                 super().__setattr__('completed', True) # Setting the completion date must set this todo as completed...
             else:
                 super().__setattr__('completed', False) # ...and vice-versa
