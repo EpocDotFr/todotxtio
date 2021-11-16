@@ -163,6 +163,29 @@ def from_string(string):
 
 
         #
+        # evaluate remarks
+        #
+
+        # detect and remove remarks from todotxt line at erliest possible time
+        # in order to not allow further token identification within the remarks
+        # but only the remaining text section. otherwise, the usage of tokens
+        # within the remarks would have the potential to mess up the task's
+        # metadata.
+
+        # get all remark portions as a list of strings
+        todo_remarks = todo_remarks_regex.findall(text)
+        if todo_remarks:
+            # concatenate portions
+            todo_remarks = '\\'.join(todo_remarks)
+            # translate LINE BREAKS
+            todo.remarks = todo_remarks.replace('\\','\n')
+            # remove all remark portions from text
+            text = todo_remarks_regex.sub('', text).strip()
+
+
+
+
+        #
         # evaluate contexts and projects
         #
 
@@ -177,23 +200,6 @@ def from_string(string):
         if len(todo_contexts) > 0:
             todo.contexts = todo_contexts
             text = todo_context_regex.sub('', text).strip()
-
-
-
-
-        #
-        # evaluate remarks
-        #
-
-        # get all remark portions as a list of strings
-        todo_remarks = todo_remarks_regex.findall(text)
-        if todo_remarks:
-            # concatenate portions
-            todo_remarks = '\\'.join(todo_remarks)
-            # translate LINE BREAKS
-            todo.remarks = todo_remarks.replace('\\','\n')
-            # remove all remark portions from text
-            text = todo_remarks_regex.sub('', text).strip()
 
 
 
