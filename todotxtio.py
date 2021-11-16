@@ -37,8 +37,8 @@ todo_data_regex = re.compile( \
                              '(?:(\d{4}-\d{2}-\d{2}) )?' \
                              )
 
-# project and subproject names
-todo_project_regex = re.compile(' \+(\S*)')
+# project and subproject names (ignore single "+" chars)
+todo_project_regex = re.compile(' \+(\S+)')
 
 # context and subcontext names
 todo_context_regex = re.compile(' @(\S*)')
