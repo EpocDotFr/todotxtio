@@ -38,7 +38,7 @@ todo_data_regex = re.compile( \
                              )
 
 # project and subproject names (ignore single "+" chars)
-todo_project_regex = re.compile(' \+(\S+)')
+todo_project_regex = re.compile(' \+(\w\S+)')
 
 # context and subcontext names
 todo_context_regex = re.compile(' @(\S*)')
