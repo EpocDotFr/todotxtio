@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import re
+import regex as re
 import io
 
 __version__ = '1.1.2'
@@ -56,7 +56,8 @@ todo_tobeinformed_regex = re.compile(' \[\+(\S*)\]')
 todo_filelink_regex = re.compile(' (http://|https://|link:)(\S*)')
 
 # text block of remarks
-todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')
+# todo_remarks_regex = re.compile(' \{([^\{\}]*)\}')        # this one does not cover necessary recursions
+todo_remarks_regex = re.compile('{((?:[^{}]|(?R))*)}')
 
 # all other information as tags
 todo_tag_regex = re.compile(' ([A-z]\S*?):(\S*)')
@@ -171,6 +172,16 @@ def from_string(string):
         # but only the remaining text section. otherwise, the usage of tokens
         # within the remarks would have the potential to mess up the task's
         # metadata.
+
+        # TECH CONCEPT
+        # especially task management systems like GitLab insert their own
+        # special characters into the remarks section of tasks. e.g. when
+        # providing Markdown or other formats. this might lead to "nested"
+        # curly braces, which would be mistakenly identified as delimiters for
+        # remarks when evaluated. to solve this, a "recursive" regex mechanism
+        # is needed. so, the "re" library has been replaced by the "regex"
+        # library which has a compatible interface but provides recursive
+        # functionalities.
 
         # get all remark portions as a list of strings
         todo_remarks = todo_remarks_regex.findall(text)
